@@ -22,6 +22,8 @@ grades.tex
 ltxobj/
 notes.pdf
 slides.pdf
+time.py
+time.tex
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

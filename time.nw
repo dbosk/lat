@@ -1,0 +1,107 @@
+\section{Time distributions}\label{TimeDistributions}
+
+Here we provide the program~[[time.py]], which computes the distribution of 
+times (mean, median, \etc) for course rounds.
+
+We will read the data in CSV form, so we need the [[csv]] module.
+We read the data from standard input.
+<<time.py>>=
+import argparse
+import csv
+import matplotlib, matplotlib.pyplot as plt
+import pandas as pd
+import sys
+
+def main():
+  parser = argparse.ArgumentParser(
+    description="Compute time statistics for course rounds")
+
+  <<add command-line arguments to parser>>
+  args = parser.parse_args()
+  data = pd.read_csv(sys.stdin)
+  <<compute the time statistics for data based on args>>
+
+if __name__ == "__main__":
+  main()
+@
+
+We want to group rows on various attributes.
+We have one argument for selecting which attribute (column) to group by.
+Then we need two more arguments to select which values should fit into which 
+group.
+<<add command-line arguments to parser>>=
+parser.add_argument("-g", "--group-by", default="Round",
+  help="The column name to group by")
+parser.add_argument("-G", "--groups", nargs="+", action="append",
+  help="The values of each group, groups separated by semicolon (;)")
+@
+
+The construction above lets us add [[-G]] several times.
+Each time with a new group.
+<<set up the groups list to iterate over>>=
+groups = []
+if args.groups:
+  groups = args.groups
+else:
+  groups = [[group] for group in data[args.group_by].unique()]
+@
+
+\subsection{Computing the time statistics}
+
+Now we can compute the grade statistics for each group.
+We can compute the grade statistics as follows.
+<<compute the time statistics for data based on args>>=
+<<set up the groups list to iterate over>>
+
+stats = []
+labels = []
+
+for group in groups:
+  group_data = data[data[args.group_by].isin(group)]
+  group_name = "+".join(group)
+  stats.append(group_data["Time"])
+  labels.append(group_name)
+
+<<print the table>>
+@
+
+\subsection{Outputting the stats}
+
+We want to produce a figure to visualize the data.
+We want to provide an option for the file name.
+<<add command-line arguments to parser>>=
+parser.add_argument("-f", "--fig-out",
+  help="Filename for saving figure of data")
+@
+
+However, we might want the results in different forms: do we want the results 
+normalized or as cumulative counts?
+<<add command-line arguments to parser>>=
+parser.add_argument("-n", "--normalize", action="store_true", default=False,
+  help="Normalize counts")
+@
+
+Now, we can just use that filename when saving.
+<<print the table>>=
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+  "pgf.texsystem": "pdflatex",
+  'font.family': 'serif',
+  'text.usetex': True,
+  'pgf.rcfonts': False,
+})
+
+if "fig_out" in args:
+  plt.tight_layout()
+  fig = plt.figure()
+  ax = fig.add_subplot()
+
+  if args.normalize:
+    ax.hist(stats, label=labels, bins=100, density=True)
+  else:
+    ax.hist(stats, label=labels, bins=100)
+  ax.legend()
+
+  plt.savefig(args.fig_out)
+@
+
