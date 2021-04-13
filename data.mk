@@ -5,22 +5,54 @@ grade-dist.py: grades.nw
 
 grades.tex: grades.nw
 
-DD1315-lab3-time.pgf DD1315-lab3-time.tex: DD1315.csv time.py
+.PHONY: clean clean-noweb
+clean: clean-noweb
+clean-noweb:
+	${RM} time.py time.tex
+	${RM} grade-dist.py
+	${RM} grades.tex
+
+
+DD1315-LAB1-time.pgf DD1315-LAB1-time.tex: DD1315.csv time.py
+	(head -n 1 DD1315.csv; grep LAB1 DD1315.csv) | \
+		python time.py -n -g Round \
+			-G 51386 \
+			-G 50869 50662 50650 50523 \
+			-G 50917 51210 50094 50167 60420 \
+			-f DD1315-LAB1-time.pgf \
+			> DD1315-LAB1-time.tex
+
+DEPENDS+=$(addsuffix .pgf,DD1315-LAB1-time)
+DEPENDS+=$(addsuffix .tex,DD1315-LAB1-time)
+
+DD1315-LAB2-time.pgf DD1315-LAB2-time.tex: DD1315.csv time.py
+	(head -n 1 DD1315.csv; grep LAB2 DD1315.csv) | \
+		python time.py -n -g Round \
+			-G 51386 \
+			-G 50869 50662 50650 50523 \
+			-G 50917 51210 50094 50167 60420 \
+			-f DD1315-LAB2-time.pgf \
+			> DD1315-LAB2-time.tex
+
+DEPENDS+=$(addsuffix .pgf,DD1315-LAB2-time)
+DEPENDS+=$(addsuffix .tex,DD1315-LAB2-time)
+
+DD1315-LAB3-time.pgf DD1315-LAB3-time.tex: DD1315.csv time.py
 	(head -n 1 DD1315.csv; grep LAB3 DD1315.csv) | \
 		python time.py -n -g Round \
 			-G 51386 \
 			-G 50869 50662 50650 50523 \
 			-G 50917 51210 50094 50167 60420 \
-			-f DD1315-lab3-time.pgf \
-			> DD1315-lab3-time.tex
+			-f DD1315-LAB3-time.pgf \
+			> DD1315-LAB3-time.tex
 
-DEPENDS+=$(addsuffix .pgf,DD1315-lab3-time)
-DEPENDS+=$(addsuffix .tex,DD1315-lab3-time)
+DEPENDS+=$(addsuffix .pgf,DD1315-LAB3-time)
+DEPENDS+=$(addsuffix .tex,DD1315-LAB3-time)
 
 
 DD1315-all.pgf DD1315-all.tex: DD1315.csv grade-dist.py
 	(head -n 1 DD1315.csv; grep LAB3 DD1315.csv) | \
-		python grade-dist.py -TnLf DD1315-all.pgf \
+		python grade-dist.py -nLf DD1315-all.pgf \
 			-G 51386 \
 			-G 50869 -G 50662 -G 50650 \
 			-G 50523 -G 50917 -G 51210 -G 50094 -G 50167 -G 60420 \
@@ -87,6 +119,13 @@ DD1312-grouped.pgf DD1312-grouped.tex: DD1312.csv grade-dist.py
 
 DEPENDS+=$(addsuffix .pgf,DD1312-all DD1312-grouped)
 DEPENDS+=$(addsuffix .tex,DD1312-all DD1312-grouped)
+
+
+.PHONY: clean clean-data
+clean: clean-data
+clean-data:
+	${RM} ${DEPENDS}
+
 
 
 INCLUDE_MAKEFILES=./makefiles

@@ -97,9 +97,12 @@ if "fig_out" in args:
   ax = fig.add_subplot()
 
   if args.normalize:
-    ax.hist(stats, label=labels, bins=100, density=True)
+    ax.hist(stats, label=labels, bins=25, density=True)
+    ax.set_ylabel("Density")
   else:
-    ax.hist(stats, label=labels, bins=100)
+    ax.hist(stats, label=labels, bins=50)
+    ax.set_ylabel("Counts")
+  ax.set_xlabel("Normalized time")
   ax.legend()
 
   plt.savefig(args.fig_out)

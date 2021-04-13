@@ -2,6 +2,7 @@
 all: notes.pdf slides.pdf
 
 LATEXFLAGS+=	-shell-escape
+TEX_PYTHONTEX=	yes
 
 SRC+=		preamble.tex
 SRC+=		abstract.tex contents.tex
