@@ -1,3 +1,7 @@
+SUBDIR_GOALS=	all clean distclean
+
+SUBDIR+=	cli
+
 .PHONY: all
 all: notes.pdf slides.pdf
 
@@ -25,5 +29,6 @@ include data.mk
 notes.pdf slides.pdf: ${DEPENDS}
 
 
-INCLUDE_MAKEFILES=./makefiles
-include ${INCLUDE_MAKEFILES}/tex.mk
+INCLUDE_MAKEFILES=../../makefiles
+include ${INCLUDE_MAKEFILES}/noweb.mk
+include ${INCLUDE_MAKEFILES}/subdir.mk

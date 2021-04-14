@@ -8,11 +8,16 @@ SRC+=		preamble.tex
 SRC+=		abstract.tex contents.tex
 SRC+=		grades.tex time.tex
 
+CODE+=		../src/latools/cli/cli.tex
+
 notes.pdf: notes.tex
 notes.pdf: ${SRC}
 
 slides.pdf: slides.tex
 slides.pdf: ${SRC}
+
+../%:
+	${MAKE} -C $(dir $@) $(notdir $@)
 
 
 .PHONY: clean
