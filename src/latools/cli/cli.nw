@@ -1,5 +1,6 @@
 This is the documentation of the command-line interface module ([[cli]]) of the 
-[[latools]] package, [[<<cli.py>>]].
+[[latools]] package, [[<<cli.py>>]] (which will be [[__init__.py]] in the 
+package).
 The command-line interface, the [[lat]] command, is divided into subcommands, 
 similar to Git.
 The subcommands are documented in \cref{subcommands}.
@@ -8,8 +9,6 @@ The subcommands are documented in \cref{subcommands}.
 \section{Overview of the source code and dependencies}
 
 We use [[argparse]] with [[argcomplete]] to handle the command-line interface.
-We use [[appdirs]] to handle configuration directories on various systems, we 
-set up a global [[dirs]] that we can use.
 <<cli.py>>=
 #!/bin/env python3
 """A command-line interface for latools"""

@@ -2,31 +2,25 @@ SUBDIR_GOALS=	all clean distclean
 
 SUBDIR+=	cli
 
+MODULES+=
+
+
 .PHONY: all
-all: notes.pdf slides.pdf
+all: __init__.py latools.tex
+all: ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
 
-LATEXFLAGS+=	-shell-escape
-TEX_PYTHONTEX=	yes
-
-SRC+=		preamble.tex
-SRC+=		abstract.tex contents.tex
-SRC+=		grades.tex time.tex
-
-notes.pdf: notes.tex
-notes.pdf: ${SRC}
-
-slides.pdf: slides.tex
-slides.pdf: ${SRC}
+__init__.py: latools.py
+	${MV} $< $@
 
 
 .PHONY: clean
 clean:
-	${RM} notes.pdf slides.pdf
+	${RM} __init__.py latools.py latools.tex
+	${RM} ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
 
-
-include data.mk
-
-notes.pdf slides.pdf: ${DEPENDS}
+.PHONY: distclean
+distclean:
+	true
 
 
 INCLUDE_MAKEFILES=../../makefiles

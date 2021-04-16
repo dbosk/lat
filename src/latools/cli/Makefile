@@ -1,4 +1,5 @@
-MODULES+=
+MODULES+=	grades.nw
+MODULES+=	time.nw
 
 
 .PHONY: all
