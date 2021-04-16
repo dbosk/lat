@@ -144,13 +144,12 @@ This yields \cref{GradeDistGroupedFig}.
   \label{GradeDistGroupedFig}
 \end{figure}
 
-\endinput
 
 \section{Example time analyses}
 
 \begin{frame}
   \begin{figure}
-    \input{DD1315-LAB1-time.pgf}
+    %\input{DD1315-LAB1-time.pgf}
     \caption{Distribution of finishing times for LAB1 on DD1315.}
     \label{DD1315-LAB1-time-fig}
   \end{figure}
@@ -158,7 +157,7 @@ This yields \cref{GradeDistGroupedFig}.
 
 \begin{frame}
   \begin{figure}
-    \input{DD1315-LAB2-time.pgf}
+    %\input{DD1315-LAB2-time.pgf}
     \caption{Distribution of finishing times for LAB2 on DD1315.}
     \label{DD1315-LAB2-time-fig}
   \end{figure}
@@ -166,7 +165,7 @@ This yields \cref{GradeDistGroupedFig}.
 
 \begin{frame}
   \begin{figure}
-    \input{DD1315-LAB3-time.pgf}
+    %\input{DD1315-LAB3-time.pgf}
     \caption{Distribution of finishing times for LAB3 on DD1315.}
     \label{DD1315-LAB3-time-fig}
   \end{figure}
@@ -193,7 +192,7 @@ DD1312 is covered in \cref{%
 \begin{frame}
 \begin{figure}
 \centering
-\input{DD1315-all.pgf}
+%\input{DD1315-all.pgf}
 \caption{All rounds of DD1315 separately.}
 \label{DD1315-all-figure}
 \end{figure}
@@ -201,102 +200,102 @@ DD1312 is covered in \cref{%
 
 \begin{table}
 \centering
-\input{DD1315-all.tex}
+%\input{DD1315-all.tex}
 \caption{All rounds of DD1315 separately.}
 \label{DD1315-all-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1315-grouped.pgf}
+%\input{DD1315-grouped.pgf}
 \caption{Rounds of DD1315 suitably grouped.}
 \label{DD1315-grouped-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1315-grouped.tex}
+%\input{DD1315-grouped.tex}
 \caption{Rounds of DD1315 suitably grouped.}
 \label{DD1315-grouped-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1315-last.pgf}
+%\input{DD1315-last.pgf}
 \caption{All rounds of DD1315 grouped together, except the last.}
 \label{DD1315-last-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1315-last.tex}
+%\input{DD1315-last.tex}
 \caption{All rounds of DD1315 grouped together, except the last.}
 \label{DD1315-last-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1310-all.pgf}
+%\input{DD1310-all.pgf}
 \caption{All rounds of DD1310 separately.}
 \label{DD1310-all-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1310-all.tex}
+%\input{DD1310-all.tex}
 \caption{All rounds of DD1310 separately.}
 \label{DD1310-all-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1310-grouped.pgf}
+%\input{DD1310-grouped.pgf}
 \caption{All rounds of DD1310 grouped suitably together.}
 \label{DD1310-grouped-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1310-grouped.tex}
+%\input{DD1310-grouped.tex}
 \caption{All rounds of DD1310 grouped suitably together.}
 \label{DD1310-grouped-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1312-all.pgf}
+%\input{DD1312-all.pgf}
 \caption{All rounds of DD1312 separately.}
 \label{DD1312-all-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1312-all.tex}
+%\input{DD1312-all.tex}
 \caption{All rounds of DD1312 separately.}
 \label{DD1312-all-table}
 \end{table}
 
 \begin{figure}
 \centering
-\input{DD1312-grouped.pgf}
+%\input{DD1312-grouped.pgf}
 \caption{All rounds of DD1312 grouped suitably together.}
 \label{DD1312-grouped-figure}
 \end{figure}
 
 \begin{table}
 \centering
-\input{DD1312-grouped.tex}
+%\input{DD1312-grouped.tex}
 \caption{All rounds of DD1312 grouped suitably together.}
 \label{DD1312-grouped-table}
 \end{table}
 
 
-\chapter{The main CLI program}
+\chapter{The \texttt{lat} CLI program}
 
 \input{../src/latools/cli/cli.tex}
 
 
-\appendix
+\chapter{The \texttt{latools} package}
 
-\input{grades.tex}
-\input{time.tex}
+\input{../src/latools/latools.tex}
+

@@ -6,15 +6,17 @@ TEX_PYTHONTEX=	yes
 
 SRC+=		preamble.tex
 SRC+=		abstract.tex contents.tex
-SRC+=		grades.tex time.tex
 
 CODE+=		../src/latools/cli/cli.tex
+CODE+=		../src/latools/cli/grades.tex
+CODE+=		../src/latools/cli/time.tex
+CODE+=		../src/latools/latools.tex
 
 notes.pdf: notes.tex
-notes.pdf: ${SRC}
+notes.pdf: ${SRC} ${CODE}
 
 slides.pdf: slides.tex
-slides.pdf: ${SRC}
+slides.pdf: ${SRC} ${CODE}
 
 ../%:
 	${MAKE} -C $(dir $@) $(notdir $@)
@@ -25,10 +27,10 @@ clean:
 	${RM} notes.pdf slides.pdf
 
 
-include data.mk
+#include data.mk
 
 notes.pdf slides.pdf: ${DEPENDS}
 
 
-INCLUDE_MAKEFILES=./makefiles
+INCLUDE_MAKEFILES=../makefiles
 include ${INCLUDE_MAKEFILES}/tex.mk

@@ -1,4 +1,6 @@
 \documentclass[a4paper,oneside]{book}
+\newenvironment{abstract}{}{}
+\usepackage{abstract}
 
 \usepackage[hyphens]{url}
 \usepackage[hidelinks]{hyperref}
@@ -24,22 +26,28 @@
 \declaretheorem[numbered=unless unique,style=exercise]{question}
 \declaretheorem[numbered=unless unique,style=solution]{solution}
 
-\begin{document}
 \title{%
-  Course analysis report
+  Learning Analytics Tools
 }
 \author{Daniel Bosk}
 \institute{%
   KTH EECS
 }
 
+\begin{document}
+\thispagestyle{empty}
 \maketitle
 
+\frontmatter
 \begin{abstract}
   \input{abstract.tex}
 \end{abstract}
 
+\tableofcontents
+
+\mainmatter
 \input{contents.tex}
 
+\backmatter
 \printbibliography
 \end{document}

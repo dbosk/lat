@@ -128,5 +128,5 @@ clean-data:
 
 
 
-INCLUDE_MAKEFILES=./makefiles
+INCLUDE_MAKEFILES=../makefiles
 include ${INCLUDE_MAKEFILES}/noweb.mk
