@@ -1,5 +1,5 @@
 This is the library part of the [[latools]] package.
 
 Here we document [[latools.py]] which will be [[__init__.py]] in the package.
-<<latools.py>>=
+<<lat.py>>=
 @
