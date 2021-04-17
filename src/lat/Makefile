@@ -6,16 +6,16 @@ MODULES+=
 
 
 .PHONY: all
-all: __init__.py latools.tex
+all: __init__.py lat.tex
 all: ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
 
-__init__.py: latools.py
+__init__.py: lat.py
 	${MV} $< $@
 
 
 .PHONY: clean
 clean:
-	${RM} __init__.py latools.py latools.tex
+	${RM} __init__.py lat.py lat.tex
 	${RM} ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
 
 .PHONY: distclean

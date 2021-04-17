@@ -69,7 +69,6 @@ argp = argparse.ArgumentParser(
   description="Command-line interface for LATools",
   epilog="Web: https://github.com/dbosk/latools"
 )
-<<add global configuration options to argp>>
 subp = argp.add_subparsers(
   title="commands",
   dest="command",
@@ -78,7 +77,6 @@ subp = argp.add_subparsers(
 <<add subparsers to subp>>
 argcomplete.autocomplete(argp)
 args = argp.parse_args()
-<<process global configuration options in args>>
 <<execute subcommand>>
 @
 

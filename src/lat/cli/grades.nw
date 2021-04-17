@@ -5,7 +5,7 @@ distribution for course rounds.
 
 We will read the data in CSV form, so we need the [[csv]] module.
 We read the data from standard input.
-<<grade-dist.py>>=
+<<grades.py>>=
 import argparse
 import csv
 import matplotlib
@@ -13,14 +13,21 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-def main():
-  parser = argparse.ArgumentParser(
-    description="Compute grade distributions for course rounds")
-
+def add_command_options(parser):
   <<add grade-dist command-line arguments to parser>>
-  args = parser.parse_args()
+
+def command(args):
   data = pd.read_csv(sys.stdin)
   <<compute the grade distributions for data based on args>>
+
+def main():
+  parser = argparse.ArgumentParser(
+    help="Compute grade distributions"
+    description="Compute grade distributions for course rounds")
+
+  add_command_options(parser)
+  args = parser.parse_args()
+  command(args)
 
 if __name__ == "__main__":
   main()

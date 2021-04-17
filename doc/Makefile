@@ -7,10 +7,10 @@ TEX_PYTHONTEX=	yes
 SRC+=		preamble.tex
 SRC+=		abstract.tex contents.tex
 
-CODE+=		../src/latools/cli/cli.tex
-CODE+=		../src/latools/cli/grades.tex
-CODE+=		../src/latools/cli/time.tex
-CODE+=		../src/latools/latools.tex
+CODE+=		../src/lat/cli/cli.tex
+CODE+=		../src/lat/cli/grades.tex
+CODE+=		../src/lat/cli/time.tex
+CODE+=		../src/lat/lat.tex
 
 notes.pdf: notes.tex
 notes.pdf: ${SRC} ${CODE}
@@ -18,7 +18,7 @@ notes.pdf: ${SRC} ${CODE}
 slides.pdf: slides.tex
 slides.pdf: ${SRC} ${CODE}
 
-../%:
+../%::
 	${MAKE} -C $(dir $@) $(notdir $@)
 
 

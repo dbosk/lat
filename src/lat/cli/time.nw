@@ -12,14 +12,20 @@ import matplotlib, matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
+def add_command_options(parser):
+  <<add command-line arguments to parser>>
+
+def command(args):
+  data = pd.read_csv(sys.stdin)
+  <<compute the time statistics for data based on args>>
+
 def main():
   parser = argparse.ArgumentParser(
     description="Compute time statistics for course rounds")
+  add_command_options(parser)
 
-  <<add command-line arguments to parser>>
   args = parser.parse_args()
-  data = pd.read_csv(sys.stdin)
-  <<compute the time statistics for data based on args>>
+  command(args)
 
 if __name__ == "__main__":
   main()
