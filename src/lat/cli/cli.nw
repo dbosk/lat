@@ -1,5 +1,5 @@
 This is the documentation of the command-line interface module ([[cli]]) of the 
-[[latools]] package, [[<<cli.py>>]] (which will be [[__init__.py]] in the 
+[[lat]] package, [[<<cli.py>>]] (which will be [[__init__.py]] in the 
 package).
 The command-line interface, the [[lat]] command, is divided into subcommands, 
 similar to Git.
@@ -11,7 +11,7 @@ The subcommands are documented in \cref{subcommands}.
 We use [[argparse]] with [[argcomplete]] to handle the command-line interface.
 <<cli.py>>=
 #!/bin/env python3
-"""A command-line interface for latools"""
+"""A command-line interface for lat"""
 
 import argcomplete, argparse
 import os
@@ -67,7 +67,7 @@ We'll use [[argparse]].
 <<process command-line options>>=
 argp = argparse.ArgumentParser(
   description="Command-line interface for LATools",
-  epilog="Web: https://github.com/dbosk/latools"
+  epilog="Web: https://github.com/dbosk/lat"
 )
 subp = argp.add_subparsers(
   title="commands",
@@ -99,7 +99,7 @@ function [[add_command_options]] that takes [[subp]] as an argument.
 
 We add the [[grades]] subcommand.
 <<modules>>=
-import latools.cli.grades as grades
+import lat.cli.grades as grades
 @
 <<add subparsers to subp>>=
 grades.add_command_options(subp)
@@ -107,7 +107,7 @@ grades.add_command_options(subp)
 
 We add the [[time]] command.
 <<modules>>=
-import latools.cli.time as time
+import lat.cli.time as time
 @
 <<add subparsers to subp>>=
 time.add_command_options(subp)

@@ -9,11 +9,15 @@ all: ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
 __init__.py: cli.py
 	${MV} $< $@
 
+lat.bash:
+	register-python-argcomplete lat > $@
+
 
 .PHONY: clean
 clean:
 	${RM} __init__.py cli.py cli.tex
 	${RM} ${MODULES:.nw=.tex} ${MODULES:.nw=.py}
+	${RM} lat.bash
 
 .PHONY: distclean
 distclean:
