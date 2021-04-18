@@ -14,6 +14,11 @@ import pandas as pd
 import sys
 
 def add_command_options(parser):
+  parser = parser.add_parser("grades",
+    help="analyse grade data",
+    description="Analyse grade data, e.g. grade distributions")
+  parser.set_defaults(func=command)
+
   <<add grade-dist command-line arguments to parser>>
 
 def command(args):
@@ -22,7 +27,6 @@ def command(args):
 
 def main():
   parser = argparse.ArgumentParser(
-    help="Compute grade distributions"
     description="Compute grade distributions for course rounds")
 
   add_command_options(parser)

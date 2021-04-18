@@ -13,6 +13,11 @@ import pandas as pd
 import sys
 
 def add_command_options(parser):
+  parser = parser.add_parser("time",
+    help="analyse time aspects of grade data",
+    description="Analyse time distribution for grade data.")
+  parser.set_defaults(func=command)
+
   <<add command-line arguments to parser>>
 
 def command(args):
