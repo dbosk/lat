@@ -1,0 +1,314 @@
+\mode*
+
+\chapter{Some examples}
+
+\section{Grade statistics}
+
+We want to compute some statistics for the grade distributions.
+We can do this as follows.
+\begin{pyblock}[statstest][numbers=left]
+import numpy as np
+import pandas as pd
+
+prgi = pd.read_csv("DD1315.csv")
+
+rounds_years = {
+  "51386": "2020",
+  "50869": "2019",
+  "50662": "2018",
+  "50650": "2017",
+  "50523": "2016",
+  "50917": "2015",
+  "51210": "2014",
+  "50094": "2013",
+  "50167": "2012",
+  "60420": "2011"
+}
+prgi_LAB3 = prgi[
+  prgi.Component.eq("LAB3") & prgi.Round.isin(rounds_years.keys())
+].replace(rounds_years)
+
+stats = pd.crosstab(prgi_LAB3.Grade, prgi_LAB3.Round)
+
+for column in stats:
+  stats[column] /= stats[column].sum()
+
+print(stats.round(3).to_latex(
+  label="GradeDistribution",
+  caption="Grade distribution for the DD1315 course."
+))
+\end{pyblock}
+This yields \cref{GradeDistribution}.
+
+\stdoutpythontex
+
+We can also show this as a bar plot.
+\begin{pyblock}[statstest][numbers=left,firstnumber=last]
+import matplotlib
+import matplotlib.pyplot as plt
+import tikzplotlib
+
+stats.plot.bar()
+
+print(tikzplotlib.get_tikz_code(axis_width="13cm"))
+\end{pyblock}
+This yields \cref{GradeDistributionFig}.
+
+\begin{figure}
+  \centering
+  \stdoutpythontex
+  \caption{Grade distribution for the DD1315 course.}
+  \label{GradeDistributionFig}
+\end{figure}
+
+If we convert the grades to numbers, then we can also compute the average grade 
+with standard deviation \etc.
+\begin{pyblock}[statstest][numbers=left,firstnumber=last]
+grade_map = {
+  "A": 5, "B": 4, "C": 3, "D": 2, "E": 1, "-": 0, np.nan: 0
+}
+grades_num = prgi_LAB3[ ["Round", "Grade"] ].replace(grade_map)
+
+print(grades_num.groupby("Round")["Grade"].describe().round(3).to_latex(
+  label="GradeStats",
+  caption="Statistics for grades of the DD1315 course, grade map: " +
+    ", ".join([f"{g} $\mapsto$ {s}" for g, s in grade_map.items()]) + "."
+))
+\end{pyblock}
+This yields \cref{GradeStats}.
+
+\stdoutpythontex
+
+We'll try to visualize the density of the grade distribution.
+\begin{pyblock}[statstest][numbers=left,firstnumber=last]
+grades_num.groupby("Round").plot.density()
+
+print(tikzplotlib.get_tikz_code(axis_width="13cm"))
+\end{pyblock}
+This yields \cref{GradeDensityFig}.
+
+\begin{figure}
+  \centering
+  \stdoutpythontex
+  \caption{Grade density for the DD1315 course.}
+  \label{GradeDensityFig}
+\end{figure}
+
+Finally, we'd like to merge the old rounds to compare with the latest.
+We can see in \cref{GradeDistribution,GradeStats} that the years 2019--2016 and 
+2015--2011 seem to be clustered in terms of performance.
+They have similar numbers in those clusters.
+\begin{pyblock}[statstest][numbers=left,firstnumber=last]
+rounds_avg = {
+  "2019": "2019--2016",
+  "2018": "2019--2016",
+  "2017": "2019--2016",
+  "2016": "2019--2016",
+  "2015": "2015--2011",
+  "2014": "2015--2011",
+  "2013": "2015--2011",
+  "2012": "2015--2011",
+  "2011": "2015--2011"
+}
+grades_avg = grades_num.replace(rounds_avg)
+
+print(grades_avg.groupby("Round")["Grade"].describe().round(3).to_latex(
+  label="GradeStatsAvg",
+  caption="Statistics for grades of the DD1315 course, grade map: " +
+    ", ".join([f"{g} $\mapsto$ {s}" for g, s in grade_map.items()]) + "."
+))
+\end{pyblock}
+This yields \cref{GradeStatsAvg}.
+
+\stdoutpythontex
+
+We can also plot this.
+\begin{pyblock}[statstest][numbers=left,firstnumber=last]
+grades_grouped = prgi_LAB3[ ["Round", "Grade"] ].replace(rounds_avg)
+
+stats_grouped = pd.crosstab(grades_grouped.Grade, grades_grouped.Round)
+
+for column in stats_grouped:
+  stats_grouped[column] /= stats_grouped[column].sum()
+
+stats_grouped.plot.bar()
+
+print(tikzplotlib.get_tikz_code(axis_width="13cm"))
+\end{pyblock}
+This yields \cref{GradeDistGroupedFig}.
+
+\begin{figure}
+  \centering
+  \stdoutpythontex
+  \caption{Grade distribution grouped over the years.}
+  \label{GradeDistGroupedFig}
+\end{figure}
+
+
+\section{Example time analyses}
+
+\begin{frame}
+  \begin{figure}
+    %\input{DD1315-LAB1-time.pgf}
+    \caption{Distribution of finishing times for LAB1 on DD1315.}
+    \label{DD1315-LAB1-time-fig}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    %\input{DD1315-LAB2-time.pgf}
+    \caption{Distribution of finishing times for LAB2 on DD1315.}
+    \label{DD1315-LAB2-time-fig}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    %\input{DD1315-LAB3-time.pgf}
+    \caption{Distribution of finishing times for LAB3 on DD1315.}
+    \label{DD1315-LAB3-time-fig}
+  \end{figure}
+\end{frame}
+
+
+\section{Example grade analyses}
+
+We performed some analyses on the courses DD1315, DD1310, DD1312.
+DD1315 is covered in \cref{%
+  DD1315-all-figure,DD1315-all-table,%
+  DD1315-grouped-figure,DD1315-grouped-table,%
+  DD1315-last-figure,DD1315-last-table%
+}.
+DD1310 is covered in \cref{%
+  DD1310-all-figure,DD1310-all-table,%
+  DD1310-grouped-figure,DD1310-grouped-table,%
+}.
+DD1312 is covered in \cref{%
+  DD1312-all-figure,DD1312-all-table,%
+  DD1312-grouped-figure,DD1312-grouped-table,%
+}
+
+\begin{frame}
+\begin{figure}
+\centering
+%\input{DD1315-all.pgf}
+\caption{All rounds of DD1315 separately.}
+\label{DD1315-all-figure}
+\end{figure}
+\end{frame}
+
+\begin{table}
+\centering
+%\input{DD1315-all.tex}
+\caption{All rounds of DD1315 separately.}
+\label{DD1315-all-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1315-grouped.pgf}
+\caption{Rounds of DD1315 suitably grouped.}
+\label{DD1315-grouped-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1315-grouped.tex}
+\caption{Rounds of DD1315 suitably grouped.}
+\label{DD1315-grouped-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1315-last.pgf}
+\caption{All rounds of DD1315 grouped together, except the last.}
+\label{DD1315-last-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1315-last.tex}
+\caption{All rounds of DD1315 grouped together, except the last.}
+\label{DD1315-last-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1310-all.pgf}
+\caption{All rounds of DD1310 separately.}
+\label{DD1310-all-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1310-all.tex}
+\caption{All rounds of DD1310 separately.}
+\label{DD1310-all-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1310-grouped.pgf}
+\caption{All rounds of DD1310 grouped suitably together.}
+\label{DD1310-grouped-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1310-grouped.tex}
+\caption{All rounds of DD1310 grouped suitably together.}
+\label{DD1310-grouped-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1312-all.pgf}
+\caption{All rounds of DD1312 separately.}
+\label{DD1312-all-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1312-all.tex}
+\caption{All rounds of DD1312 separately.}
+\label{DD1312-all-table}
+\end{table}
+
+\begin{figure}
+\centering
+%\input{DD1312-grouped.pgf}
+\caption{All rounds of DD1312 grouped suitably together.}
+\label{DD1312-grouped-figure}
+\end{figure}
+
+\begin{table}
+\centering
+%\input{DD1312-grouped.tex}
+\caption{All rounds of DD1312 grouped suitably together.}
+\label{DD1312-grouped-table}
+\end{table}
+
+
+\part{The command-line interface}
+
+\chapter{The \texttt{lat} CLI program}
+
+\input{../src/lat/cli/cli.tex}
+
+\chapter{The \texttt{grades} subcommand}
+
+\input{../src/lat/cli/grades.tex}
+
+
+\chapter{The \texttt{time} subcommand}
+
+\input{../src/lat/cli/time.tex}
+
+
+\part{The library}
+
+\chapter{The \texttt{lat} package}
+
+\input{../src/lat/lat.tex}
+

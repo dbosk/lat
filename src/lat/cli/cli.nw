@@ -1,0 +1,115 @@
+This is the documentation of the command-line interface module ([[cli]]) of the 
+[[lat]] package, [[<<cli.py>>]] (which will be [[__init__.py]] in the 
+package).
+The command-line interface, the [[lat]] command, is divided into subcommands, 
+similar to Git.
+The subcommands are documented in \cref{subcommands}.
+
+
+\section{Overview of the source code and dependencies}
+
+We use [[argparse]] with [[argcomplete]] to handle the command-line interface.
+<<cli.py>>=
+#!/bin/env python3
+"""A command-line interface for lat"""
+
+import argcomplete, argparse
+import os
+import sys
+
+<<modules>>
+
+<<functions>>
+
+<<command-line interface>>
+@
+
+
+\section{A command-line interface}%
+\label{command-line-interface}
+
+The idea is that we have the basic command that can take some options and 
+ultimately some subcommand.
+The subcommands do the heavy lifting.
+We use a standard Pythonic if-main construction.
+<<command-line interface>>=
+def main():
+  """Run the command-line interface for the lat command"""
+  <<process command-line options>>
+
+if __name__ == "__main__":
+  try:
+    main()
+    sys.exit(0)
+  except Exception as e:
+    err(-1, e)
+@
+
+We want uniform error handling.
+We will use the function [[err]] for errors and [[warn]] for warnings, both 
+inspired by err(3) and warn(3) in the BSD world.
+<<functions>>=
+def err(rc, msg):
+  print(f"{sys.argv[0]}: error: {msg}", file=sys.stderr)
+  sys.exit(rc)
+
+def warn(msg):
+  print(f"{sys.argv[0]}: {msg}", file=sys.stderr)
+@
+
+
+\subsection{Process command-line options}%
+\label{process-command-line-options}
+
+The main thing to do here is to set up the parser for the subcommands and 
+options.
+We'll use [[argparse]].
+<<process command-line options>>=
+argp = argparse.ArgumentParser(
+  description="Command-line interface for LATools",
+  epilog="Web: https://github.com/dbosk/lat"
+)
+subp = argp.add_subparsers(
+  title="commands",
+  dest="command",
+  required=True
+)
+<<add subparsers to subp>>
+argcomplete.autocomplete(argp)
+args = argp.parse_args()
+<<execute subcommand>>
+@
+
+For each subcommand, we will add a subparser ([[subp.add_parser]]) that will 
+set the [[func]] attribute.
+Then we can execute the correct function and let that function check the 
+remaining arguments.
+<<execute subcommand>>=
+if "func" in args:
+  args.func(args)
+@
+
+
+\section{The subcommands}\label{subcommands}
+
+To add a subcommand we must add a subparser to the [[subp]] parser object from 
+above, we do this in [[<<add subparsers to subp>>]].
+Every subcommand exists in a separate module and that module provides the 
+function [[add_command_options]] that takes [[subp]] as an argument.
+
+We add the [[grades]] subcommand.
+<<modules>>=
+import lat.cli.grades as grades
+@
+<<add subparsers to subp>>=
+grades.add_command_options(subp)
+@
+
+We add the [[time]] command.
+<<modules>>=
+import lat.cli.time as time
+@
+<<add subparsers to subp>>=
+time.add_command_options(subp)
+@
+

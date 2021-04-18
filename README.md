@@ -1,2 +1,3 @@
-# course-analytics
-Analytics for course performance using data from Canvas and LADOK
+# Learning Analytics Tools
+
+Analytics for course performance.
