@@ -1,11 +1,12 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,article,oneside]{memoir}
+\let\subsubsection\subsection
+\let\subsection\section
+\let\section\chapter
+
 \input{preamble.tex}
+\usepackage{didactic}
 
-% https://tex.stackexchange.com/a/205183/17418
-\def\shortyear#1{\expandafter\shortyearhelper#1}
-\def\shortyearhelper#1#2#3#4{#3#4}
-
-\title{Results summary: tilkry\shortyear{\the\year}}
+\title{Results stats for Canvas courses}
 \author{Daniel Bosk}
 
 \begin{document}
@@ -14,19 +15,33 @@
 @
 
 \begin{pycode}
+import os
 import subprocess
 
+tilkry24_LAB1 = "canvaslms.grades.tilkryLAB1"
+
 def minted_output(command):
-    output = subprocess.run(command, capture_output=True)
-    print(r'\begin{minted}{text}')
-    print(output.stdout.decode('utf-8').strip())
-    print(r'\end{minted}')
+  env = os.environ.copy()
+  env["tilkry24_LAB1"] = tilkry24_LAB1
+
+  output = subprocess.run(command, capture_output=True,
+                          env=env)
+
+  print(r'\begin{minted}{text}')
+  stdout = output.stdout.decode('utf-8').strip()
+  if stdout:
+    print(stdout)
+  stderr = output.stderr.decode('utf-8').strip()
+  if stderr:
+    print(stderr)
+  print(r'\end{minted}')
 \end{pycode}
 
 \section{The stats}
 
 We'll give an overview of the stats here.
-In the following section we see how they are computed.
+We'll use the tilkry24 course as an example.
+In the following section we see how the results are computed.
 In this section we'll just run the script and show the output here.
 
 \subsection{Results on INL1}
@@ -34,13 +49,13 @@ In this section we'll just run the script and show the output here.
 The INL1 module has only mandatory assignments.
 Let's start with the overall grades:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'grades', 'INL1'])
+minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'INL1'])
 \end{pycode}
 
 We can see that there are some Fs.
 Let's see which assignments generated Fs:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'fails', 'INL1'])
+minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
 Most are due to the quiz.
 
@@ -51,21 +66,21 @@ This is the more complex part where there are optional assignments, and
 depending on how the student does they'll get a grade in the scale between A 
 and F.
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'grades', 'LAB1'])
+minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1'])
 \end{pycode}
 Most students did well.
 Particularly many got an A or B.
 
 Let's see which assignments generated Fs:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'fails', 'LAB1'])
+minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'LAB1'])
 \end{pycode}
 Only one.
 This is probably due to the students not having submitted some of the mandatory 
 assignments.
 Therefore, let's have a look at which assignments missed the most submissions:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'missing', 'LAB1'])
+minted_output(['bash', 'results.sh', 'missing', 'tilkry24', 'LAB1'])
 \end{pycode}
 We see that rather many of the mandatory assignments are missing submissions.
 
@@ -127,36 +142,47 @@ include ${INCLUDE_MAKEFILES}/noweb.mk
 \subsection{Calling the functions}
 
 We'll take the function name as the first argument and simply call it.
-If we don't have any arguments, we'll call the [[all]] function.
+If we don't have any arguments, we'll print a help text.
 <<call specified function>>=
-[[ "$1" = "" ]] && all || "$@"
+[[ "$1" = "" ]] \
+  && <<echo help text>> \
+  || "$@"
+<<echo help text>>=
+echo -e "Usage: $0 [function]\nFunctions:\n<<list all functions>>"
+<<list all functions>>=
+$(sed -En 's/^(\w+)\(\) \{/  \1/p' $0 | grep -Pv '^\s*main$')
+@
+
+We'll also add a function that runs all the most interesting functions.
 <<functions>>=
 all() {
-  <<call all functions>>
+  local course="$1"
+  shift
+  local modules="$@"
+
+  for module in $modules; do
+    echo
+    <<call all functions>>
+  done
 }
 @
 
 
-
 \subsection{Fetching the results}
-
-Let's start by defining the course and modules that we're interested in.
-<<constants>>=
-YEAR=$(date +%y)
-COURSE=tilkry${YEAR}
-@
 
 We'll now defined two functions that can be used to fetch the desired results.
 These will also act as a cache, so that we don't fetch results more than once.
 
-We have two modules: LAB1 and INL1.
-LAB1 needs a particular module to compute the final grade ([[-S]] option).
+The functions will take two arguments, the course and the module.
+On tilkry24 we have two modules: LAB1 and INL1.
+
+LAB1 needs a particular summary module to compute the final grade ([[-S]] 
+option to [[canvaslms results]]).
 So we need to treat that with a special case.
 But INL1 can use the default.
 
 We'll use a function to fetch the results for each module.
-It takes the module as an argument.
-If the module is LAB1, we'll use the special case.
+It takes the course and module as an argument.
 
 We'll compute the grades using [[canvaslms results]], which is the same way as 
 the results are reported to LADOK.
@@ -166,50 +192,77 @@ This way each function can call the same function to fetch the results, but it
 will slow down only if they don't already exist.
 <<functions>>=
 fetch_results() {
-  local module=$1
-  local file=results-${module}.csv
+  local course="$1"
+  local module="$2"
+  local file="results-${course}-${module}.csv"
 
   echo "$file"
+  [[ -f "$file" ]] && return
 
-  [[ -f $file ]] && return
+  <<variables for summary module>>
 
-  case $module in
-    LAB1)
-      canvaslms results -c ${COURSE} -F '' \
-        -A "^${module}" -S canvaslms.grades.tilkry${module} \
-        > ${file}
-      ;;
-    *)
-      canvaslms results -c ${COURSE} -F '' \
-        -A "^${module}" \
-        > ${file}
-      ;;
-  esac
+  canvaslms results -c "${course}" -F '' \
+    -A "^${module}" \
+    <<add [[-S]] option if needed>> \
+    > "${file}"
 }
+@
+
+If the module needs a summary module, we'll handle it by setting a particular 
+environment variable.
+As mentioned above, tilkry24 LAB1 needed a special summary module.
+If we set
+\begin{center}
+  [[tilkry24_LAB1=canvaslms.grades.tilkryLAB1]]
+\end{center}
+the function will use it.
+<<variables for summary module>>=
+local summary_module=`get_summary_module "${course}" "${module}" 2> /dev/null`
+<<functions>>=
+get_summary_var() {
+  local course="$1"
+  local module="$2"
+  local var_name="${course}_${module}"
+  echo "${!module_var}"
+}
+<<add [[-S]] option if needed>>=
+$([[ -n "$summary_module" ]] && echo "-S $summary_module")
 @
 
 We'll do the same for fetching submission results for the individual 
 assignments (not the module as a whole).
-There is no special case for this one.
+Unlike the previous one, there is no special case here.
 <<functions>>=
 fetch_submissions() {
-  local module=$1
-  local file=submissions-${module}.csv
+  local course="$1"
+  local module="$2"
+  local file="submissions-${course}-${module}.csv"
 
   echo "$file"
+  [[ -f "$file" ]] && return
 
-  [[ -f $file ]] && return
-
-  canvaslms submissions -c ${COURSE} \
+  canvaslms submissions -c "${course}" \
     -A "^${module}" \
-    > ${file}
+    > "${file}"
 }
 @
 
+Finally, we also want to be able to clear the results cache.
+We call this function to refresh the results, to sound less dramatic.
+<<functions>>=
+refresh() {
+  local course="$1"
+  shift
+  local module="$@"
 
-\subsection{The stats}
+  for module in $modules; do
+    rm -f "results-${course}-${module}.csv"
+    rm -f "submissions-${course}-${module}.csv"
+  done
+}
+@
 
-Let's look at the stats.
+Now let's look at the stats.
 We'll add one function per stat we want.
 
 \subsection{Grades of modules}
@@ -219,59 +272,66 @@ We'll create a function that generates stats for a module, where the module is
 passed as an argument.
 <<functions>>=
 grades() {
+  local course="$1"
+  shift
   local modules="$@"
   
   for module in $modules; do
-    local results=`fetch_results $module`
+    local results=`fetch_results "$course" "$module"`
     echo
-    echo "${module}:"
-    cat $results | cut -f 4 | sort | uniq -c
+    echo "${course} ${module} grades:"
+    cat "$results" | cut -f 4 | sort | uniq -c
   done
 }
 @
 
-If we consider running [[grades LAB1 INL1]], the result looks like this:
+If we consider running [[grades tilkry24 LAB1 INL1]], the result looks like 
+this:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'grades', 'LAB1', 'INL1'])
+minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1', 'INL1'])
 \end{pycode}
 
 
 \subsection{Which assignments generated Fs?}\label{GeneratedFs}
 
-We want to know this for each of the modules (LAB1, INL1).
-We want a function that takes the module as an argument and then outputs the 
-distribution of Fs for the assignments.
+We want a function that takes the course and a module as an argument and then 
+outputs the distribution of Fs for the assignments.
 We'll do this by filtering out the Fs and then count the occurrences of each 
 assignment.
 <<functions>>=
 fails() {
+  local course="$1"
+  shift
   local modules="$@"
 
   for module in $modules; do
-    local submissions=`fetch_submissions $module`
+    local submissions=`fetch_submissions "$course" "$module"`
     echo
-    echo "${module} Fs:"
-    grep -E '\sFx?\s' $submissions | cut -f 2 | sort | uniq -c \
+    echo "${course} ${module} Fs:"
+    grep <<pattern for failed grades in [[submissions]]>> \
+      | cut -f 2 | sort | uniq -c \
       | sort -n
   done
 }
+<<pattern for failed grades in [[submissions]]>>=
+-E "\\s($FAILED_PATTERN)\\s" "$submissions"
+<<constants>>=
+FAILED_PATTERN='Fx?|incomplete'
 @
 
-If we consider running [[fails INL1]], the result looks like this:
+If we consider running [[fails tilkry24 INL1]], the result looks like this:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'fails', 'INL1'])
+minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
 
-\subsection{Stats of LAB1 and INL1}
+\subsection{Adding grades and fails to \texttt{all}}
 
 We'll start by looking at the grades of LAB1, which is also the final grade.
 <<call all functions>>=
 echo
-grades LAB1
-fails LAB1
+grades "$course" "$module"
 echo
-grades INL1
-fails INL1
+fails "$course" "$module"
 @
 
 \subsection{Which assignments were the least popular?}
@@ -286,49 +346,55 @@ the distribution of submissions for each assignment.
 A submission is counted as a submission if it has a date.
 <<functions>>=
 submissions() {
+  local course="$1"
+  shift
   local modules="$@"
 
   for module in $modules; do
     <<update submissions file [[submissions]]>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
-    echo "${module} submissions:"
+    echo "${course} ${module} submissions:"
     grep <<date in [[submissions]]>> \
       | <<cut submission name and count>>
     <<print maximum possible>>
   done
 }
 <<update submissions file [[submissions]]>>=
-local submissions=`fetch_submissions $module`
+local submissions=`fetch_submissions "$course" "$module"`
 <<calculate [[num_users]] from [[submissions]]>>=
-local num_users=`cat $submissions | cut -f 3 | sort -u | wc -l`
+local num_users=`cat "$submissions" | cut -f 3 | sort -u | wc -l`
 <<date in [[submissions]]>>=
--P '\d{4}-\d{2}-\d{2}' $submissions
+-P '\d{4}-\d{2}-\d{2}' "$submissions"
 <<cut submission name and count>>=
 cut -f 2 | sort | uniq -c | sort -rn
 <<print maximum possible>>=
 echo "Out of maximum ${num_users}."
 @
 
-If we consider running [[submissions INL1]], the result looks like this:
+If we consider running [[submissions tilkry24 INL1]], the result looks like 
+this:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'submissions', 'INL1'])
+minted_output(['bash', 'results.sh', 'submissions', 'tilkry24', 'INL1'])
 \end{pycode}
 But if we look at LAB1, which has optional assignments, we get this:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'submissions', 'LAB1'])
+minted_output(['bash', 'results.sh', 'submissions', 'tilkry24', 'LAB1'])
 \end{pycode}
 
 We also add a function for the opposite, to count how many submissions an 
 assignment is missing.
+This is in fact more interesting to know.
 <<functions>>=
 missing() {
+  local course="$1"
+  shift
   local modules="$@"
   for module in $modules; do
     <<update submissions file [[submissions]]>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
-    echo "${module} missing submissions:"
+    echo "${course} ${module} missing submissions:"
     grep -v -P <<date in [[submissions]]>> \
       | <<cut submission name and count>>
     <<print maximum possible>>
@@ -336,11 +402,28 @@ missing() {
 }
 @
 
-If we consider running [[missing LAB1]], the result looks like this:
+If we consider running [[missing tilkry24 LAB1]], the result looks like this:
 \begin{pycode}
-minted_output(['bash', 'results.sh', 'missing', 'LAB1'])
+minted_output(['bash', 'results.sh', 'missing', 'tilkry24', 'LAB1'])
 \end{pycode}
 We can see that the assignment \enquote{Secure multi-party computation} is the 
 only (optional) assignment that no student did.
+
+It makes the most sense to add this to the [[all]] function.
+Because we want to see the grades and then the missing assignments, not the 
+submissions.
+<<call all functions>>=
+echo
+missing "$course" "$module"
+@
+
+\subsection{Testing on another course}
+
+We'll now test the script on another course.
+We'll use it on the LAB3 module of prgm23 and prgi23:
+[[all prg[im]23 LAB3]].
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
+\end{pycode}
 
 \end{document}
