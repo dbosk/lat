@@ -134,6 +134,15 @@ We'll execute the script in the documentation using PythonTeX, so we need the
 LATEXFLAGS+=  -shell-escape
 @
 
+We'll also use the [[didactic]] package.
+We'll use the one from the repo instead of an installed version.
+<<Makefile>>=
+results.pdf: didactic.sty
+
+INCLUDE_DIDACTIC=../didactic
+include ${INCLUDE_DIDACTIC}/didactic.mk
+@
+
 Finally, we'll use some automation to build.
 <<Makefile>>=
 INCLUDE_MAKEFILES=../makefiles
