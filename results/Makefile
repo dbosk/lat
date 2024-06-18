@@ -5,7 +5,7 @@ all: results.pdf results
 
 results.pdf: results.tex results.sh
 results: results.sh
-	ln $< $@
+	ln -f $< $@
 	chmod +x $@
 Makefile: results.nw
 	${NOTANGLE.mk}
