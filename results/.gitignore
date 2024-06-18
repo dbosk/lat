@@ -1,0 +1,5 @@
+ltxobj/
+results.pdf
+results.sh
+results.tex
+*.csv
