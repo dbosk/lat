@@ -116,7 +116,7 @@ all: results.pdf results
 
 results.pdf: results.tex results.sh
 results: results.sh
-	ln $< $@
+	ln -f $< $@
 	chmod +x $@
 @
 
@@ -455,16 +455,23 @@ to_ladok() {
   for module in $modules; do
     local results=`fetch_results "$course" "$module"`
     cat "$results" \
+      | <<remove Fs from the list>> \
       | <<rewrite course name to course code>> \
       | ladok report -fv
   done
 }
 @
 
+To remove the Fs from the list we'll use the same pattern as in 
+\cref{GeneratedFs}.
+<<remove Fs from the list>>=
+grep -v -E "\\s($FAILED_PATTERN)\\s"
+@
+
 For the tilkry24 course, the course name is \enquote{DD2520 VT24 (tilkry24)}.
 So we'll rewrite this to \enquote{DD2520} before sending it to LADOK.
 <<rewrite course name to course code>>=
-sed -E "s/ ?[HV]T\d{2}( \([^\t]*\))?//"
+sed -E "s/ ?[HV]T[0-9]{2}( \(.*\))?//"
 @
 
 \end{document}
