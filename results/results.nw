@@ -112,9 +112,12 @@ and how they were generated.
 <<Makefile variables>>
 
 .PHONY: all
-all: results.pdf results.sh
+all: results.pdf results
 
 results.pdf: results.tex results.sh
+results: results.sh
+	ln $< $@
+	chmod +x $@
 @
 
 We'll also build this Makefile.
