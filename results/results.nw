@@ -426,4 +426,33 @@ We'll use it on the LAB3 module of prgm23 and prgi23:
 minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
 \end{pycode}
 
+
+\section{Transferring the results to LADOK}
+
+A final feature that might be useful, although it's not about stats, is to 
+report the results used by the stats to LADOK.
+This function will work the same as others, take a course and a list of 
+modules, then it will simply pipe the results to the [[ladok report]] command.
+(It will also rewrite course names to course codes.)
+<<functions>>=
+to_ladok() {
+  local course="$1"
+  shift
+  local modules="$@"
+
+  for module in $modules; do
+    local results=`fetch_results "$course" "$module"`
+    cat "$results" \
+      | <<rewrite course name to course code>> \
+      | ladok report -fv
+  done
+}
+@
+
+For the tilkry24 course, the course name is \enquote{DD2520 VT24 (tilkry24)}.
+So we'll rewrite this to \enquote{DD2520} before sending it to LADOK.
+<<rewrite course name to course code>>=
+sed -E "s/ ?[HV]T\d{2}( \([^\t]*\))?//"
+@
+
 \end{document}
