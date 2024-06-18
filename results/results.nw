@@ -231,7 +231,7 @@ the function will use it.
 <<variables for summary module>>=
 local summary_module=`get_summary_module "${course}" "${module}" 2> /dev/null`
 <<functions>>=
-get_summary_var() {
+get_summary_module() {
   local course="$1"
   local module="$2"
   local var_name="${course}_${module}"
