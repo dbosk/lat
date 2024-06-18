@@ -235,7 +235,7 @@ get_summary_var() {
   local course="$1"
   local module="$2"
   local var_name="${course}_${module}"
-  echo "${!module_var}"
+  echo "${!var_name}"
 }
 <<add [[-S]] option if needed>>=
 $([[ -n "$summary_module" ]] && echo "-S $summary_module")
@@ -260,16 +260,19 @@ fetch_submissions() {
 @
 
 Finally, we also want to be able to clear the results cache.
-We call this function to refresh the results, to sound less dramatic.
+We call this function to refetch the results, to sound less dramatic\footnote{%
+  Clean and clear might sound like we're deleting the results, but we're just 
+  refetching them.
+}.
 <<functions>>=
-refresh() {
+refetch() {
   local course="$1"
   shift
-  local module="$@"
+  local modules="$@"
 
   for module in $modules; do
-    rm -f "results-${course}-${module}.csv"
-    rm -f "submissions-${course}-${module}.csv"
+    rm -f `fetch_results "$course" "$module"`
+    rm -f `fetch_submissions "$course" "$module"`
   done
 }
 @
