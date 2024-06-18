@@ -271,8 +271,8 @@ refetch() {
   local modules="$@"
 
   for module in $modules; do
-    rm -f `fetch_results "$course" "$module"`
-    rm -f `fetch_submissions "$course" "$module"`
+    rm -f "results-${course}-${module}.csv"
+    rm -f "submissions-${course}-${module}.csv"
   done
 }
 @
