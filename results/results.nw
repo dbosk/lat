@@ -216,7 +216,7 @@ will slow down only if they don't already exist.
 fetch_results() {
   local course="$1"
   local module="$2"
-  local file="results-${course}-${module}.csv"
+  local file="${cache_dir}/results-${course}-${module}.csv"
 
   echo "$file"
   [[ -f "$file" ]] && return
@@ -228,6 +228,20 @@ fetch_results() {
     <<add [[-S]] option if needed>> \
     > "${file}"
 }
+@
+
+We want to cache the results, so we'll set a cache directory.
+This way we can control where the cache is stored.
+For instance, if we set it to [[/tmp]], the cache will be removed when the 
+system is rebooted or a sufficiently long time has passed.
+But we might just as well set it to [[.]] to keep the cache in the current 
+working directory.
+
+We will also let the user set the cache directory by setting an environment 
+variable.
+If that is set we'll use it, otherwise we'll use [[/tmp]] by default.
+<<constants>>=
+cache_dir="${RESULTS_CACHE:-/tmp}"
 @
 
 If the module needs a summary module, we'll handle it by setting a particular 
@@ -258,7 +272,7 @@ Unlike the previous one, there is no special case here.
 fetch_submissions() {
   local course="$1"
   local module="$2"
-  local file="submissions-${course}-${module}.csv"
+  local file="${cache_dir}/submissions-${course}-${module}.csv"
 
   echo "$file"
   [[ -f "$file" ]] && return
@@ -281,8 +295,8 @@ refetch() {
   local modules="$@"
 
   for module in $modules; do
-    rm -f "results-${course}-${module}.csv"
-    rm -f "submissions-${course}-${module}.csv"
+    rm -f "${cache_di}/results-${course}-${module}.csv"
+    rm -f "${cache_dir}/submissions-${course}-${module}.csv"
   done
 }
 @
