@@ -6,7 +6,7 @@
 \input{preamble.tex}
 \usepackage{didactic}
 
-\title{Results stats for Canvas courses}
+\title{Some stats for Canvas courses}
 \author{Daniel Bosk}
 
 \begin{document}
