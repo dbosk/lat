@@ -330,6 +330,11 @@ this:
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1', 'INL1'])
 \end{pycode}
 
+This is useful enough to add to the [[all]] function.
+<<call all functions>>=
+echo
+grades "$course" "$module"
+@
 
 \subsection{Which assignments generated Fs?}\label{GeneratedFs}
 
@@ -363,12 +368,8 @@ If we consider running [[fails tilkry24 INL1]], the result looks like this:
 minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
 
-\subsection{Adding grades and fails to \texttt{all}}
-
-We'll start by looking at the grades of LAB1, which is also the final grade.
+This is also useful enough to add to the [[all]] function.
 <<call all functions>>=
-echo
-grades "$course" "$module"
 echo
 fails "$course" "$module"
 @
