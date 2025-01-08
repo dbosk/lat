@@ -6,7 +6,7 @@
 \input{preamble.tex}
 \usepackage{didactic}
 
-\title{Results stats for Canvas courses}
+\title{Some stats for Canvas courses}
 \author{Daniel Bosk}
 
 \begin{document}
@@ -18,14 +18,20 @@
 import os
 import subprocess
 
-tilkry24_LAB1 = "canvaslms.grades.tilkryLAB1"
+vars = {
+  "tilkry24_LAB1": "canvaslms.grades.tilkryLAB1",
+  "prgi23_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgm23_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgi24_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgm24_LAB2": "canvaslms.grades.maxgradesurvey"
+}
 
-def minted_output(command):
+def minted_output(command, shell=False):
   env = os.environ.copy()
-  env["tilkry24_LAB1"] = tilkry24_LAB1
+  env.update(vars)
 
   output = subprocess.run(command, capture_output=True,
-                          env=env)
+                          shell=shell, env=env)
 
   print(r'\begin{minted}{text}')
   stdout = output.stdout.decode('utf-8').strip()
@@ -37,7 +43,7 @@ def minted_output(command):
   print(r'\end{minted}')
 \end{pycode}
 
-\section{The stats}
+\section{Some stats}
 
 We'll give an overview of the stats here.
 We'll use the tilkry24 course as an example.
@@ -180,6 +186,10 @@ all() {
 @
 
 
+\section{Implementation of the stats}
+
+Now we'll go through the implementation of the stats functions.
+
 \subsection{Fetching the results}
 
 We'll now defined two functions that can be used to fetch the desired results.
@@ -206,7 +216,7 @@ will slow down only if they don't already exist.
 fetch_results() {
   local course="$1"
   local module="$2"
-  local file="results-${course}-${module}.csv"
+  local file="${cache_dir}/results-${course}-${module}.csv"
 
   echo "$file"
   [[ -f "$file" ]] && return
@@ -218,6 +228,20 @@ fetch_results() {
     <<add [[-S]] option if needed>> \
     > "${file}"
 }
+@
+
+We want to cache the results, so we'll set a cache directory.
+This way we can control where the cache is stored.
+For instance, if we set it to [[/tmp]], the cache will be removed when the 
+system is rebooted or a sufficiently long time has passed.
+But we might just as well set it to [[.]] to keep the cache in the current 
+working directory.
+
+We will also let the user set the cache directory by setting an environment 
+variable.
+If that is set we'll use it, otherwise we'll use [[/tmp]] by default.
+<<constants>>=
+cache_dir="${RESULTS_CACHE:-/tmp}"
 @
 
 If the module needs a summary module, we'll handle it by setting a particular 
@@ -248,7 +272,7 @@ Unlike the previous one, there is no special case here.
 fetch_submissions() {
   local course="$1"
   local module="$2"
-  local file="submissions-${course}-${module}.csv"
+  local file="${cache_dir}/submissions-${course}-${module}.csv"
 
   echo "$file"
   [[ -f "$file" ]] && return
@@ -271,8 +295,8 @@ refetch() {
   local modules="$@"
 
   for module in $modules; do
-    rm -f "results-${course}-${module}.csv"
-    rm -f "submissions-${course}-${module}.csv"
+    rm -f "${cache_di}/results-${course}-${module}.csv"
+    rm -f "${cache_dir}/submissions-${course}-${module}.csv"
   done
 }
 @
@@ -306,6 +330,11 @@ this:
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1', 'INL1'])
 \end{pycode}
 
+This is useful enough to add to the [[all]] function.
+<<call all functions>>=
+echo
+grades "$course" "$module"
+@
 
 \subsection{Which assignments generated Fs?}\label{GeneratedFs}
 
@@ -323,13 +352,13 @@ fails() {
     local submissions=`fetch_submissions "$course" "$module"`
     echo
     echo "${course} ${module} Fs:"
-    grep <<pattern for failed grades in [[submissions]]>> \
+    grep <<pattern for failed grades>> "$submissions" \
       | cut -f 2 | sort | uniq -c \
       | sort -n
   done
 }
-<<pattern for failed grades in [[submissions]]>>=
--E "\\s($FAILED_PATTERN)\\s" "$submissions"
+<<pattern for failed grades>>=
+-E "\\s($FAILED_PATTERN)\\s"
 <<constants>>=
 FAILED_PATTERN='Fx?|incomplete'
 @
@@ -339,12 +368,8 @@ If we consider running [[fails tilkry24 INL1]], the result looks like this:
 minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
 
-\subsection{Adding grades and fails to \texttt{all}}
-
-We'll start by looking at the grades of LAB1, which is also the final grade.
+This is also useful enough to add to the [[all]] function.
 <<call all functions>>=
-echo
-grades "$course" "$module"
 echo
 fails "$course" "$module"
 @
@@ -366,21 +391,21 @@ submissions() {
   local modules="$@"
 
   for module in $modules; do
-    <<update submissions file [[submissions]]>>
+    <<let [[submissions]] be the up-to-date file with submissions>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
     echo "${course} ${module} submissions:"
-    grep <<date in [[submissions]]>> \
+    grep <<date regex>> "${submissions}" \
       | <<cut submission name and count>>
     <<print maximum possible>>
   done
 }
-<<update submissions file [[submissions]]>>=
+<<let [[submissions]] be the up-to-date file with submissions>>=
 local submissions=`fetch_submissions "$course" "$module"`
 <<calculate [[num_users]] from [[submissions]]>>=
 local num_users=`cat "$submissions" | cut -f 3 | sort -u | wc -l`
-<<date in [[submissions]]>>=
--P '\d{4}-\d{2}-\d{2}' "$submissions"
+<<date regex>>=
+-P '\d{4}-\d{2}-\d{2}'
 <<cut submission name and count>>=
 cut -f 2 | sort | uniq -c | sort -rn
 <<print maximum possible>>=
@@ -406,11 +431,11 @@ missing() {
   shift
   local modules="$@"
   for module in $modules; do
-    <<update submissions file [[submissions]]>>
+    <<let [[submissions]] be the up-to-date file with submissions>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
     echo "${course} ${module} missing submissions:"
-    grep -v -P <<date in [[submissions]]>> \
+    grep -v <<date regex>> "${submissions}" \
       | <<cut submission name and count>>
     <<print maximum possible>>
   done
@@ -440,6 +465,80 @@ We'll use it on the LAB3 module of prgm23 and prgi23:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
 \end{pycode}
+
+
+\subsection{Ungraded submissions}
+
+We'll now add a function to list the number of ungraded submissions.
+This will be similar to the [[missing]] function above, but will instead count 
+the number of ungraded submissions.
+
+A submission is ungraded when
+\begin{enumerate}
+\item it has a submission date, but no grade nor grading date; or
+\item it has a grade and grading date, but it has a submission date newer than 
+the grading date---but, if it has grade P or A, it's considered graded; 
+otherwise it's ungraded.
+\end{enumerate}
+
+We want the result to look like this:
+\begin{pycode}
+minted_output(['bash', './results', 'ungraded', 'prgm24', 'LAB3'])
+\end{pycode}
+
+<<functions>>=
+ungraded() {
+  local course="$1"
+  shift
+  local modules="$@"
+
+  for module in $modules; do
+    <<let [[submissions]] be the up-to-date file with submissions>>
+    <<calculate [[num_users]] from [[submissions]]>>
+    echo
+    echo "${course} ${module} ungraded submissions:"
+    <<filter out ungraded submissions from [[submissions]]>> \
+      | <<cut submission name and count>>
+    <<print maximum possible>>
+  done
+}
+@
+
+We'll add a function to filter out the ungraded submissions.
+It'll take the submissions as input on stdin and output only the ungraded lines 
+(verbatim) on stdout.
+<<filter out ungraded submissions from [[submissions]]>>=
+cat "${submissions}" | filter_ungraded
+@
+
+To implement the function, we simply need to check the dates and grades 
+according to the rules above.
+The lines in the submissions file look like this:
+\begin{minted}{text}
+course  assignment  student  grade  submission-date  grading-date
+\end{minted}
+<<functions>>=
+filter_ungraded() {
+  awk -F '\t' '
+    {
+      if ($5 == "" && $6 == "") {
+        print
+      } else if ($5 != "" && $6 != "" && $5 > $6) {
+        if ($4 != "P" && $4 != "A") {
+          print
+        }
+      }
+    }
+  '
+}
+@
+
+Since we have grades and fails when running the [[all]] function, it might be a 
+good complement to also add the ungraded submissions.
+<<call all functions>>=
+echo
+ungraded "$course" "$module"
+@
 
 
 \section{Transferring the results to LADOK}
