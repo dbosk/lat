@@ -18,14 +18,20 @@
 import os
 import subprocess
 
-tilkry24_LAB1 = "canvaslms.grades.tilkryLAB1"
+vars = {
+  "tilkry24_LAB1": "canvaslms.grades.tilkryLAB1",
+  "prgi23_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgm23_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgi24_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgm24_LAB2": "canvaslms.grades.maxgradesurvey"
+}
 
-def minted_output(command):
+def minted_output(command, shell=False):
   env = os.environ.copy()
-  env["tilkry24_LAB1"] = tilkry24_LAB1
+  env.update(vars)
 
   output = subprocess.run(command, capture_output=True,
-                          env=env)
+                          shell=shell, env=env)
 
   print(r'\begin{minted}{text}')
   stdout = output.stdout.decode('utf-8').strip()
