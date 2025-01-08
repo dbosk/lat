@@ -352,13 +352,13 @@ fails() {
     local submissions=`fetch_submissions "$course" "$module"`
     echo
     echo "${course} ${module} Fs:"
-    grep <<pattern for failed grades in [[submissions]]>> \
+    grep <<pattern for failed grades>> "$submissions" \
       | cut -f 2 | sort | uniq -c \
       | sort -n
   done
 }
-<<pattern for failed grades in [[submissions]]>>=
--E "\\s($FAILED_PATTERN)\\s" "$submissions"
+<<pattern for failed grades>>=
+-E "\\s($FAILED_PATTERN)\\s"
 <<constants>>=
 FAILED_PATTERN='Fx?|incomplete'
 @
@@ -391,21 +391,21 @@ submissions() {
   local modules="$@"
 
   for module in $modules; do
-    <<update submissions file [[submissions]]>>
+    <<let [[submissions]] be the up-to-date file with submissions>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
     echo "${course} ${module} submissions:"
-    grep <<date in [[submissions]]>> \
+    grep <<date regex>> "${submissions}" \
       | <<cut submission name and count>>
     <<print maximum possible>>
   done
 }
-<<update submissions file [[submissions]]>>=
+<<let [[submissions]] be the up-to-date file with submissions>>=
 local submissions=`fetch_submissions "$course" "$module"`
 <<calculate [[num_users]] from [[submissions]]>>=
 local num_users=`cat "$submissions" | cut -f 3 | sort -u | wc -l`
-<<date in [[submissions]]>>=
--P '\d{4}-\d{2}-\d{2}' "$submissions"
+<<date regex>>=
+-P '\d{4}-\d{2}-\d{2}'
 <<cut submission name and count>>=
 cut -f 2 | sort | uniq -c | sort -rn
 <<print maximum possible>>=
@@ -431,11 +431,11 @@ missing() {
   shift
   local modules="$@"
   for module in $modules; do
-    <<update submissions file [[submissions]]>>
+    <<let [[submissions]] be the up-to-date file with submissions>>
     <<calculate [[num_users]] from [[submissions]]>>
     echo
     echo "${course} ${module} missing submissions:"
-    grep -v -P <<date in [[submissions]]>> \
+    grep -v <<date regex>> "${submissions}" \
       | <<cut submission name and count>>
     <<print maximum possible>>
   done
