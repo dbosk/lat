@@ -43,7 +43,7 @@ def minted_output(command, shell=False):
   print(r'\end{minted}')
 \end{pycode}
 
-\section{The stats}
+\section{Some stats}
 
 We'll give an overview of the stats here.
 We'll use the tilkry24 course as an example.
@@ -185,6 +185,10 @@ all() {
 }
 @
 
+
+\section{Implementation of the stats}
+
+Now we'll go through the implementation of the stats functions.
 
 \subsection{Fetching the results}
 
