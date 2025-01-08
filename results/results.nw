@@ -295,7 +295,7 @@ refetch() {
   local modules="$@"
 
   for module in $modules; do
-    rm -f "${cache_di}/results-${course}-${module}.csv"
+    rm -f "${cache_dir}/results-${course}-${module}.csv"
     rm -f "${cache_dir}/submissions-${course}-${module}.csv"
   done
 }
