@@ -467,6 +467,80 @@ minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
 \end{pycode}
 
 
+\subsection{Ungraded submissions}
+
+We'll now add a function to list the number of ungraded submissions.
+This will be similar to the [[missing]] function above, but will instead count 
+the number of ungraded submissions.
+
+A submission is ungraded when
+\begin{enumerate}
+\item it has a submission date, but no grade nor grading date; or
+\item it has a grade and grading date, but it has a submission date newer than 
+the grading date---but, if it has grade P or A, it's considered graded; 
+otherwise it's ungraded.
+\end{enumerate}
+
+We want the result to look like this:
+\begin{pycode}
+minted_output(['bash', './results', 'ungraded', 'prgm24', 'LAB3'])
+\end{pycode}
+
+<<functions>>=
+ungraded() {
+  local course="$1"
+  shift
+  local modules="$@"
+
+  for module in $modules; do
+    <<let [[submissions]] be the up-to-date file with submissions>>
+    <<calculate [[num_users]] from [[submissions]]>>
+    echo
+    echo "${course} ${module} ungraded submissions:"
+    <<filter out ungraded submissions from [[submissions]]>> \
+      | <<cut submission name and count>>
+    <<print maximum possible>>
+  done
+}
+@
+
+We'll add a function to filter out the ungraded submissions.
+It'll take the submissions as input on stdin and output only the ungraded lines 
+(verbatim) on stdout.
+<<filter out ungraded submissions from [[submissions]]>>=
+cat "${submissions}" | filter_ungraded
+@
+
+To implement the function, we simply need to check the dates and grades 
+according to the rules above.
+The lines in the submissions file look like this:
+\begin{minted}{text}
+course  assignment  student  grade  submission-date  grading-date
+\end{minted}
+<<functions>>=
+filter_ungraded() {
+  awk -F '\t' '
+    {
+      if ($5 == "" && $6 == "") {
+        print
+      } else if ($5 != "" && $6 != "" && $5 > $6) {
+        if ($4 != "P" && $4 != "A") {
+          print
+        }
+      }
+    }
+  '
+}
+@
+
+Since we have grades and fails when running the [[all]] function, it might be a 
+good complement to also add the ungraded submissions.
+<<call all functions>>=
+echo
+ungraded "$course" "$module"
+@
+
+
 \section{Transferring the results to LADOK}
 
 A final feature that might be useful, although it's not about stats, is to 
