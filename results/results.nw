@@ -223,7 +223,8 @@ fetch_results() {
 
   <<variables for summary module>>
 
-  canvaslms results -c "${course}" -F '' \
+  canvaslms results \
+    -c "${course}" -F '' \
     -A "^${module}" \
     <<add [[-S]] option if needed>> \
     > "${file}"
@@ -277,8 +278,30 @@ fetch_submissions() {
   echo "$file"
   [[ -f "$file" ]] && return
 
-  canvaslms submissions -c "${course}" \
+  canvaslms submissions \
+    -c "${course}" \
     -A "^${module}" \
+    > "${file}"
+}
+@
+
+We want to construct [[fetch_history]] similarly to [[fetch_submissions]], with 
+a cache.
+The only difference to the others is that we use the [[-H]] option to get the 
+history of submissions instead of only the latest.
+<<functions>>=
+fetch_history() {
+  local course="$1"
+  local module="$2"
+  local file="${cache_dir}/history-${course}-${module}.csv"
+
+  echo "$file"
+  [[ -f "$file" ]] && return
+
+  canvaslms submissions \
+    -c "${course}" \
+    -A "^${module}" \
+    -H \
     > "${file}"
 }
 @
@@ -297,6 +320,7 @@ refetch() {
   for module in $modules; do
     rm -f "${cache_dir}/results-${course}-${module}.csv"
     rm -f "${cache_dir}/submissions-${course}-${module}.csv"
+    rm -f "${cache_dir}/history-${course}-${module}.csv"
   done
 }
 @
@@ -455,6 +479,79 @@ submissions.
 <<call all functions>>=
 echo
 missing "$course" "$module"
+@
+
+
+\subsection{How many attempts did the students make to pass?}
+
+We'll now add a function to count the number of attempts the students made on 
+different assignments.
+We'll just count the attempts so far, not until pass.
+Since the passing grade might differ between assignments, we'll just count the 
+total number of attempts.
+<<functions>>=
+attempts() {
+  local course="$1"
+  shift
+  local modules="$@"
+
+  for module in $modules; do
+    local submissions=`fetch_history "$course" "$module"`
+    echo
+    <<for each [[assignment]] in [[submissions]]>>
+      echo
+      echo "${course} ${module} ${assignment} attempts:"
+      <<print counts for attempts for [[assignment]]>>
+    done
+  done
+}
+@
+
+The output of [[fetch_history]] is similar to the output of 
+[[fetch_submissions]].
+So we can get the list of assignments in the same way: get that column and sort 
+it uniquely.
+Since the assignment names will contain spaces, we need to set the IFS to 
+newline.
+<<for each [[assignment]] in [[submissions]]>>=
+local assignments=`cat "${submissions}" | cut -f 2 | sort -u`
+oldIFS="$IFS"
+IFS=$'\n'
+for assignment in $assignments; do
+  IFS="$oldIFS"
+@
+
+Lastly, we should print the counts.
+We'll do this by first filtering out the submissions for the current 
+assignment.
+<<print counts for attempts for [[assignment]]>>=
+cat "${submissions}" \
+| cut -f 2- \
+| grep "^${assignment}" \
+<<filter out only those who passed>> \
+@ Then we'll cut out the student names and count them.
+The number of times a student's name occurs is the number of attempts they 
+made.
+<<print counts for attempts for [[assignment]]>>=
+| cut -f 2 | sort | uniq -c \
+@ Finally, we'll sort the attempts, count them and print them.
+The printed counts will be sorted by the number of attempts.
+<<print counts for attempts for [[assignment]]>>=
+| sed -E "s/^ *([0-9]+).*$/\1/" | sort -n | uniq -c | sort -k 2 -n \
+@ We'll also rewrite the line to make it more readable.
+<<print counts for attempts for [[assignment]]>>=
+| sed -E "s/([0-9]+)(\s+)([0-9]+)$/\1 student(s) submitted\2\3 time(s)/"
+@
+
+If we want to filter out only the students who passed, we can do that by 
+filtering out only those who have a passing grade and then use their names to 
+filter the history.
+However, it's hard to tell what is a pass due to varying grading scales.
+It's much easier to tell what a non-passing grade is.
+So we remove everyone who has a grade which is not a pass.
+<<filter out only those who passed>>=
+| grep -f <(cat "${submissions}" | grep "${assignment}" \
+            | cut -f 3-4 | grep -Ev "(Fx?|incomplete|\s)$" | cut -f 1)
 @
 
 \subsection{Testing on another course}
