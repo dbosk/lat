@@ -21,6 +21,9 @@ import subprocess
 vars = {
   "RESULTS_CACHE": ".",
   "tilkry24_LAB1": "canvaslms.grades.tilkryLAB1",
+  "tilkry25_LAB1": "canvaslms.grades.tilkryLAB1",
+  "prgi22_LAB2": "canvaslms.grades.maxgradesurvey",
+  "prgm22_LAB2": "canvaslms.grades.maxgradesurvey",
   "prgi23_LAB2": "canvaslms.grades.maxgradesurvey",
   "prgm23_LAB2": "canvaslms.grades.maxgradesurvey",
   "prgi24_LAB2": "canvaslms.grades.maxgradesurvey",
@@ -44,7 +47,7 @@ def minted_output(command, shell=False):
   print(r'\end{minted}')
 \end{pycode}
 
-\section{Some stats}
+\section{Some stats from the tilkry course}
 
 We'll give an overview of the stats here.
 We'll use the tilkry24 course as an example.
@@ -54,13 +57,15 @@ In this section we'll just run the script and show the output here.
 \subsection{Results on INL1}
 
 The INL1 module has only mandatory assignments.
-Let's start with the overall grades:
+Let's start with the overall grades,
+[[results grades tilkry24 INL1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'INL1'])
 \end{pycode}
 
 We can see that there are some Fs.
-Let's see which assignments generated Fs:
+Let's see which assignments generated Fs,
+[[results fails tilkry24 INL1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
@@ -69,10 +74,12 @@ Most are due to the quiz.
 On tilkry24 they only had one chance on the INL1Quiz, but on tilkry25 they got 
 to retry until they passed.
 We want to see how many attempts the students made to pass the quiz.
+[[results attempts tilkry25 INL1]] yields:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'tilkry25', 'INL1'])
 \end{pycode}
-We can compare that to the results on tilkry24.
+We can compare that to the results on tilkry24,
+[[results attempts tilkry24 INL1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'tilkry24', 'INL1'])
 \end{pycode}
@@ -83,24 +90,224 @@ Let's move on to LAB1.
 This is the more complex part where there are optional assignments, and 
 depending on how the student does they'll get a grade in the scale between A 
 and F.
+We'll start with the overall grades,
+[[results grades tilkry24 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1'])
 \end{pycode}
 Most students did well.
 Particularly many got an A or B.
 
-Let's see which assignments generated Fs:
+Let's see which assignments generated Fs,
+[[results fails tilkry24 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'LAB1'])
 \end{pycode}
 Only one.
 This is probably due to the students not having submitted some of the mandatory 
 assignments.
-Therefore, let's have a look at which assignments missed the most submissions:
+Therefore, let's have a look at which assignments missed the most submissions,
+[[results missing tilkry24 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'missing', 'tilkry24', 'LAB1'])
 \end{pycode}
 We see that rather many of the mandatory assignments are missing submissions.
+
+To tilkry25 we made the presentation of AES mandatory.
+This forced the students to pick one more lab for a higher grade.
+This changed the distribution of missing submissions.
+[[results missing tilkry25 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'missing', 'tilkry25', 'LAB1'])
+\end{pycode}
+
+\section{Some stats from the prgm and prgi courses}
+
+We'll now test the script on another course.
+We'll use it on the LAB3 module of prgm23 and prgi23:
+[[results all prg[im]23 LAB3]].
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
+\end{pycode}
+We see that we can get the results for both courses taken together.
+But let's compare them.
+
+\subsection{Results on LAB1}
+
+We want to compare the results on LAB1 for prgm23, prgm24, prgi23 and prgi24.
+So we can run [[all]] on each one separately and then compare the results.
+However, it's nicer to do each individually so that we can compare more easily.
+
+Let's start with the grades.
+[[results grades prgm23 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB1'])
+\end{pycode}
+[[results grades prgm24 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB1'])
+\end{pycode}
+[[results grades prgi23 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB1'])
+\end{pycode}
+[[results grades prgi24 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB1'])
+\end{pycode}
+
+Next we want to see the number of attempts.
+[[results attempts prgm23 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm23', 'LAB1'])
+\end{pycode}
+[[results attempts prgm24 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB1'])
+\end{pycode}
+[[results attempts prgi23 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB1'])
+\end{pycode}
+[[results attempts prgi24 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'LAB1'])
+\end{pycode}
+
+
+\subsection{Results on LAB2}
+
+We also want to compare the results on LAB2 for prgm23, prgm24, prgi23 and 
+prgi24.
+But here we want to see the number of attempts of those who passed\footnote{%
+  Due to the construction of the Datorprov setup, we must run the attempts on 
+  another assignment group than LAB2.
+  Because LAB2 only contains the final grade, which doesn't account for the 
+  number of attempts.
+} and how many failed.
+Let's start with the grade distributions.
+[[results grades prgm23 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB2'])
+\end{pycode}
+[[results grades prgm24 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB2'])
+\end{pycode}
+[[results grades prgi23 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB2'])
+\end{pycode}
+[[results grades prgi24 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB2'])
+\end{pycode}
+
+Now, let's have a look at the number of attempts.
+Here we can't use LAB2, because the submissions are not done in any assignment 
+there.
+The assignments are distributed as follows.
+\begin{verbatim}
+DD1317 HT23 (prgi23)	LAB2	Datorprov
+DD1317 HT24 (prgi24)	LAB2	Betyg datorprovet
+DD1317 HT24 (prgi24)	Datorprov	Exempelprov
+DD1317 HT24 (prgi24)	Datorprov	Datorprov (v2024)
+DD1317 HT24 (prgi24)	Datorprov	Inledande diagnostiskt prov
+DD1310 HT23 (prgm23)	LAB2	Betyg datorprovet
+DD1310 HT23 (prgm23)	Imported Assignments	Datorprov (oktober)
+DD1310 HT23 (prgm23)	Imported Assignments	Datorprov (december och augusti)
+DD1310 HT24 (prgm24)	Bonus	Ackumulerad datorprovspoäng
+DD1310 HT24 (prgm24)	LAB2	Betyg datorprovet
+DD1310 HT24 (prgm24)	Datorprov	Datorprov
+DD1310 HT24 (prgm24)	Datorprov	Exempelprov
+DD1310 HT24 (prgm24)	Datorprov	Inledande diagnostiskt prov
+\end{verbatim}
+We see that for prgm23, prgm24, prgi24 the \enquote{Datorprov} assignment is 
+not in LAB2, only \enquote{Betyg datorprovet} is.
+But the attempts are in the \enquote{Datorprov} assignment, which is in the 
+\enquote{Datorprov} assignment group.
+(A script transfers the results from the \enquote{Datorprov} assignment to the 
+\enquote{Betyg datorprovet} assignment, but Canvas only counts that as changing 
+the grade of \emph{one} submission.)
+However, for prgi23, the \enquote{Datorprov} assignment is in LAB2.
+It was the same for prgm22.
+
+Let's turn to the results.
+Let's see how the number of attempts have changed over the years.
+[[results attempts prgm22 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm22', 'LAB2'])
+\end{pycode}
+[[results attempts prgi22 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi22', 'LAB2'])
+\end{pycode}
+So far, prgm22 and prgi22 did the same test.
+However, for prgm23 we changed the test.
+Now they only had two chances, but could earn bonus points.
+[[results attempts prgm23 Datorprov]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'Datorprov'])
+\end{pycode}
+But we kept the old test for prgi23.
+[[results attempts prgi23 LAB2]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB2'])
+\end{pycode}
+[[results attempts prgm24 Datorprov]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'Datorprov'])
+\end{pycode}
+For prgi24 we changed the test to the same as for prgm23 and prgm24.
+However, they didn't have the exam proctored.
+They also couldn't earn bonus points for the test.
+But they could take the test once a month throughout the academic year.
+[[results attempts prgi24 Datorprov]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'Datorprov'])
+\end{pycode}
+For prgi25, the test will be proctored, same as for prgm23, prgm24, prgm25.
+
+\subsection{Results on LAB3}
+
+We also want to compare the results on LAB3 for prgm23, prgm24, prgi23 and 
+prgi24.
+Let's start with the grades.
+[[results grades prgm23 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB3'])
+\end{pycode}
+[[results grades prgi23 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB3'])
+\end{pycode}
+[[results grades prgm24 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB3'])
+\end{pycode}
+[[results grades prgi24 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB3'])
+\end{pycode}
+
+Next we want to see the number of attempts.
+[[results attempts prgm23 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm23', 'LAB3'])
+\end{pycode}
+[[results attempts prgi23 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB3'])
+\end{pycode}
+[[results attempts prgm24 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB3'])
+\end{pycode}
+[[results attempts prgi24 LAB3]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'LAB3'])
+\end{pycode}
+
 
 
 \section{The script, or, how the results are made}
