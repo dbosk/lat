@@ -65,6 +65,17 @@ minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
 \end{pycode}
 Most are due to the quiz.
 
+On tilkry24 they only had one chance on the INL1Quiz, but on tilkry25 they got 
+to retry until they passed.
+We want to see how many attempts the students made to pass the quiz.
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'tilkry25', 'INL1'])
+\end{pycode}
+We can compare that to the results on tilkry24.
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'tilkry24', 'INL1'])
+\end{pycode}
+
 \subsection{Results on LAB1}
 
 Let's move on to LAB1.
@@ -486,9 +497,13 @@ missing "$course" "$module"
 
 We'll now add a function to count the number of attempts the students made on 
 different assignments.
-We'll just count the attempts so far, not until pass.
 Since the passing grade might differ between assignments, we'll just count the 
-total number of attempts.
+total number of attempts for those who didn't receive a failing grade.
+(It's easier to detect fails.)
+We want the result to look like this:
+\begin{pycode}
+minted_output(['bash', 'results', 'attempts', 'tilkry25', 'INL1'])
+\end{pycode}
 <<functions>>=
 attempts() {
   local course="$1"
@@ -505,6 +520,9 @@ attempts() {
     done
   done
 }
+<<call all functions>>=
+echo
+attempts "$course" "$module"
 @
 
 The output of [[fetch_history]] is similar to the output of 
