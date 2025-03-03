@@ -748,13 +748,14 @@ for assignment in $assignments; do
 @
 
 Lastly, we should print the counts.
-We'll do this by first filtering out the submissions for the current 
+We'll do this by first filtering out the relevant submissions for the current 
 assignment.
 <<print counts for attempts for [[assignment]]>>=
 cat "${submissions}" \
 | cut -f 2- \
 | grep "^${assignment}" \
-<<filter out only those who passed>> \
+| <<filter out only those who passed>> \
+| <<remove non-graded submissions>> \
 @ Then we'll cut out the student names and count them.
 The number of times a student's name occurs is the number of attempts they 
 made.
@@ -776,19 +777,20 @@ However, it's hard to tell what is a pass due to varying grading scales.
 It's much easier to tell what a non-passing grade is.
 So we remove everyone who has a grade which is not a pass.
 <<filter out only those who passed>>=
-| grep -f <(cat "${submissions}" | grep "${assignment}" \
-            | cut -f 3-4 | grep -Ev "(Fx?|incomplete|\s)$" | cut -f 1)
+grep -f <(cat "${submissions}" | grep "${assignment}" \
+          | cut -f 3-4 | grep -Ev "(Fx?|incomplete|\s)$" | cut -f 1)
 @
 
-\subsection{Testing on another course}
-
-We'll now test the script on another course.
-We'll use it on the LAB3 module of prgm23 and prgi23:
-[[all prg[im]23 LAB3]].
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
-\end{pycode}
-
+Now, we only want to include graded submissions.
+Maybe the student submits one version, updates and submits another version five 
+minutes later.
+Then one of those versions will not be graded, so it's not really an attempt.
+So we remove those submissions which are not graded, that is those that lack a 
+grading date (the last column).
+This means that we can remove all lines which end with an empty column.
+<<remove non-graded submissions>>=
+grep -v -E '\s$'
+@
 
 \subsection{Ungraded submissions}
 
