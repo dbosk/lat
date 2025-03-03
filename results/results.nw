@@ -19,6 +19,7 @@ import os
 import subprocess
 
 vars = {
+  "RESULTS_CACHE": ".",
   "tilkry24_LAB1": "canvaslms.grades.tilkryLAB1",
   "prgi23_LAB2": "canvaslms.grades.maxgradesurvey",
   "prgm23_LAB2": "canvaslms.grades.maxgradesurvey",
