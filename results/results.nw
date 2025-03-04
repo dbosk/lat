@@ -158,14 +158,8 @@ minted_output(['bash', 'results.sh', 'missing', 'tilkry25', 'LAB1'])
 
 \section{Some stats from the prgm and prgi courses}
 
-We'll now test the script on another course.
-We'll use it on the LAB3 module of prgm23 and prgi23:
-[[results all prg[im]23 LAB3]].
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'all', 'prg[im]23', 'LAB3'])
-\end{pycode}
-We see that we can get the results for both courses taken together.
-But let's compare them.
+We'll now test the script on other courses.
+We'll use the introductory programming courses, prgm23 and prgi23, as examples.
 
 \subsection{Results on LAB1}
 
@@ -174,40 +168,65 @@ So we can run [[all]] on each one separately and then compare the results.
 However, it's nicer to do each individually so that we can compare more easily.
 
 Let's start with the grades.
-[[results grades prgm23 LAB1]]:
-\begin{pycode}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgm23 LAB1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB1'])
-\end{pycode}
-[[results grades prgm24 LAB1]]:
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB1'])
-\end{pycode}
-[[results grades prgi23 LAB1]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgi23 LAB1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB1'])
-\end{pycode}
-[[results grades prgi24 LAB1]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\\[1.5em]
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgm24 LAB1]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB1'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgi24 LAB1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB1'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
 
 Next we want to see the number of attempts.
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgm23 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgm23', 'LAB1'])
 \end{pycode}
-[[results attempts prgm24 LAB1]]:
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB1'])
-\end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgi23 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB1'])
 \end{pycode}
+\end{minipage}
+
+\begin{minipage}[t]{0.45\columnwidth}
+[[results attempts prgm24 LAB1]]:
+\begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB1'])
+\end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgi24 LAB1]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'LAB1'])
 \end{pycode}
+\end{minipage}
+\end{flushleft}
+\end{fullwidth}
 
 
 \subsection{Results on LAB2}
@@ -221,22 +240,34 @@ But here we want to see the number of attempts of those who passed\footnote{%
   number of attempts.
 } and how many failed.
 Let's start with the grade distributions.
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results grades prgm23 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB2'])
 \end{pycode}
-[[results grades prgm24 LAB2]]:
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+[[results grades prgi23 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB2'])
 \end{pycode}
-[[results grades prgi23 LAB2]]:
+\end{minipage}
+\\[1.5em]
+\begin{minipage}[t]{0.45\columnwidth}
+[[results grades prgm24 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB2'])
 \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results grades prgi24 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB2'])
 \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
 
 Now, let's have a look at the number of attempts.
 Here we can't use LAB2, because the submissions are not done in any assignment 
@@ -269,38 +300,73 @@ It was the same for prgm22.
 
 Let's turn to the results.
 Let's see how the number of attempts have changed over the years.
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgm22 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgm22', 'LAB2'])
 \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgi22 LAB2]]:
 \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi22', 'LAB2'])
 \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
+\end{fullwidth}
 So far, prgm22 and prgi22 did the same test.
 However, for prgm23 we changed the test.
 Now they only had two chances, but could earn bonus points.
-[[results attempts prgm23 Datorprov]]:
-\begin{pycode}
+Those who got an Fx could do only that question on the next test.
+Others had to retake the whole test.
+
+For prgm24, everyone only needed to retake the questions that they failed.
+Otherwise it was the same as for prgm24.
+They also had more than two chances.
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgm23 Datorprov]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgm23', 'Datorprov'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgm24 Datorprov]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'Datorprov'])
-\end{pycode}
-But we kept the old test for prgi23.
-[[results attempts prgi23 LAB2]]:
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB2'])
-\end{pycode}
-[[results attempts prgm24 Datorprov]]:
-\begin{pycode}
-minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'Datorprov'])
-\end{pycode}
-For prgi24 we changed the test to the same as for prgm23 and prgm24.
-However, they didn't have the exam proctored.
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
+\end{fullwidth}
+
+But we kept the old test for prgi23 and switched to the same test in prgi24 as 
+prgm23 and prgm24.
+For both prgi23 and prgi24, the students could take the test once a month 
+throughout the year.
+They didn't have the exam proctored.
 They also couldn't earn bonus points for the test.
-But they could take the test once a month throughout the academic year.
-[[results attempts prgi24 Datorprov]]:
-\begin{pycode}
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgi23 LAB2]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB2'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgi24 Datorprov]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'Datorprov'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
+\end{fullwidth}
 For prgi25, the test will be proctored, same as for prgm23, prgm24, prgm25.
 
 \subsection{Results on LAB3}
@@ -308,40 +374,65 @@ For prgi25, the test will be proctored, same as for prgm23, prgm24, prgm25.
 We also want to compare the results on LAB3 for prgm23, prgm24, prgi23 and 
 prgi24.
 Let's start with the grades.
-[[results grades prgm23 LAB3]]:
-\begin{pycode}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgm23 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgm23', 'LAB3'])
-\end{pycode}
-[[results grades prgi23 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgi23 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi23', 'LAB3'])
-\end{pycode}
-[[results grades prgm24 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\end{flushleft}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgm24 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgm24', 'LAB3'])
-\end{pycode}
-[[results grades prgi24 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades prgi24 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB3'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\end{flushleft}
 
 Next we want to see the number of attempts.
-[[results attempts prgm23 LAB3]]:
-\begin{pycode}
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgm23 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgm23', 'LAB3'])
-\end{pycode}
-[[results attempts prgi23 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgi23 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi23', 'LAB3'])
-\end{pycode}
-[[results attempts prgm24 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\\[1.5em]
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgm24 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB3'])
-\end{pycode}
-[[results attempts prgi24 LAB3]]:
-\begin{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results attempts prgi24 LAB3]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'LAB3'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\end{flushleft}
+\end{fullwidth}
 
 
 
@@ -758,7 +849,7 @@ attempts() {
     echo
     <<for each [[assignment]] in [[submissions]]>>
       echo
-      echo "${course} ${module} ${assignment} attempts:"
+      echo "${course} ${module} ${assignment}:"
       <<print counts for attempts for [[assignment]]>>
     done
   done
@@ -789,8 +880,8 @@ assignment.
 cat "${submissions}" \
 | cut -f 2- \
 | grep "^${assignment}" \
-| <<filter out only those who passed>> \
 | <<remove non-graded submissions>> \
+| <<filter out only those who passed>> \
 @ Then we'll cut out the student names and count them.
 The number of times a student's name occurs is the number of attempts they 
 made.
@@ -802,7 +893,18 @@ The printed counts will be sorted by the number of attempts.
 | sed -E "s/^ *([0-9]+).*$/\1/" | sort -n | uniq -c | sort -k 2 -n \
 @ We'll also rewrite the line to make it more readable.
 <<print counts for attempts for [[assignment]]>>=
-| sed -E "s/([0-9]+)(\s+)([0-9]+)$/\1 student(s) submitted\2\3 time(s)/"
+| sed -E "s/([0-9]+)(\s+)([0-9]+)$/\1 student(s) needed \2\3 attempt(s)/"
+@
+
+Now, we only want to include graded submissions.
+Maybe the student submits one version, updates and submits another version five 
+minutes later.
+Then one of those versions will not be graded, so it's not really an attempt.
+So we remove those submissions which are not graded, that is those that lack a 
+grading date (the last column).
+This means that we grep for submissions with two dates.
+<<remove non-graded submissions>>=
+grep -E '\s[0-9]{4}-[0-9]{2}-[0-9]{2}.*\s[0-9]{4}-[0-9]{2}-[0-9]{2}.*$'
 @
 
 If we want to filter out only the students who passed, we can do that by 
@@ -814,17 +916,6 @@ So we remove everyone who has a grade which is not a pass.
 <<filter out only those who passed>>=
 grep -f <(cat "${submissions}" | grep "${assignment}" \
           | cut -f 3-4 | grep -Ev "(Fx?|incomplete|\s)$" | cut -f 1)
-@
-
-Now, we only want to include graded submissions.
-Maybe the student submits one version, updates and submits another version five 
-minutes later.
-Then one of those versions will not be graded, so it's not really an attempt.
-So we remove those submissions which are not graded, that is those that lack a 
-grading date (the last column).
-This means that we can remove all lines which end with an empty column.
-<<remove non-graded submissions>>=
-grep -v -E '\s$'
 @
 
 \subsection{Ungraded submissions}
