@@ -564,7 +564,7 @@ fetch_results() {
   local file="${cache_dir}/results-${course}-${module}.csv"
 
   echo "$file"
-  [[ -f "$file" ]] && return
+  [[ -s "$file" ]] && return
 
   <<variables for summary module>>
 
@@ -621,7 +621,7 @@ fetch_submissions() {
   local file="${cache_dir}/submissions-${course}-${module}.csv"
 
   echo "$file"
-  [[ -f "$file" ]] && return
+  [[ -s "$file" ]] && return
 
   canvaslms submissions \
     -c "${course}" \
@@ -641,7 +641,7 @@ fetch_history() {
   local file="${cache_dir}/history-${course}-${module}.csv"
 
   echo "$file"
-  [[ -f "$file" ]] && return
+  [[ -s "$file" ]] && return
 
   canvaslms submissions \
     -c "${course}" \
