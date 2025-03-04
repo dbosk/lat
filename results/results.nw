@@ -57,18 +57,42 @@ In this section we'll just run the script and show the output here.
 \subsection{Results on INL1}
 
 The INL1 module has only mandatory assignments.
-Let's start with the overall grades,
-[[results grades tilkry24 INL1]]:
-\begin{pycode}
+Let's start with the overall grades.
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades tilkry24 INL1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'INL1'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades tilkry25 INL1]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'tilkry25', 'INL1'])
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
 
 We can see that there are some Fs.
-Let's see which assignments generated Fs,
-[[results fails tilkry24 INL1]]:
-\begin{pycode}
+Let's see which assignments generated Fs.
+\begin{fullwidth}
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results fails tilkry24 INL1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'fails', 'tilkry24', 'INL1'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results fails tilkry25 INL1]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'fails', 'tilkry25', 'INL1'])
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
+\end{fullwidth}
 Most are due to the quiz.
 
 On tilkry24 they only had one chance on the INL1Quiz, but on tilkry25 they got 
@@ -90,11 +114,22 @@ Let's move on to LAB1.
 This is the more complex part where there are optional assignments, and 
 depending on how the student does they'll get a grade in the scale between A 
 and F.
-We'll start with the overall grades,
-[[results grades tilkry24 LAB1]]:
-\begin{pycode}
+We'll start with the overall grades.
+\begin{flushleft}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades tilkry24 LAB1]]:
+  \begin{pycode}
 minted_output(['bash', 'results.sh', 'grades', 'tilkry24', 'LAB1'])
-\end{pycode}
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grades tilkry25 LAB1]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'grades', 'tilkry25', 'LAB1'])
+  \end{pycode}
+\end{minipage}
+\\[.5em]
+\end{flushleft}
 Most students did well.
 Particularly many got an A or B.
 
