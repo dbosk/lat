@@ -1185,8 +1185,10 @@ Since we want to compare the current throughput to that by the end of the
 course, we would like to print the results side by side.
 We can use [[paste]] to do that.
 <<output the throughput based on [[results_all]] and [[results_by_end]]>>=
-paste <(echo "Current:"; echo "$results_all" | throughput_stdin) \
-      <(echo "At end:"; echo "$results_by_end" | throughput_stdin)
+paste <(echo "Current:                       "; \
+        echo "$results_all" | throughput_stdin) \
+      <(echo "At end:                        "; \
+        echo "$results_by_end" | throughput_stdin)
 @
 
 \end{document}
