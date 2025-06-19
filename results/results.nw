@@ -322,8 +322,8 @@ It was the same for prgm22.
 
 Let's turn to the results.
 Let's see how the number of attempts have changed over the years.
-\begin{fullwidth}
 \begin{flushleft}
+\begin{fullwidth}
 \begin{minipage}[t]{0.45\columnwidth}
 [[results attempts prgm22 LAB2]]:
 \begin{pycode}
@@ -337,8 +337,8 @@ minted_output(['bash', 'results.sh', 'attempts', 'prgi22', 'LAB2'])
 \end{pycode}
 \end{minipage}
 \\[.5em]
-\end{flushleft}
 \end{fullwidth}
+\end{flushleft}
 So far, prgm22 and prgi22 did the same test.
 However, for prgm23 we changed the test.
 Now they only had two chances, but could earn bonus points.
@@ -348,8 +348,8 @@ Others had to retake the whole test.
 For prgm24, everyone only needed to retake the questions that they failed.
 Otherwise it was the same as for prgm24.
 They also had more than two chances.
-\begin{fullwidth}
 \begin{flushleft}
+\begin{fullwidth}
 \begin{minipage}[t]{0.45\columnwidth}
   [[results attempts prgm23 Datorprov]]:
   \begin{pycode}
@@ -363,8 +363,8 @@ minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'Datorprov'])
   \end{pycode}
 \end{minipage}
 \\[.5em]
-\end{flushleft}
 \end{fullwidth}
+\end{flushleft}
 
 But we kept the old test for prgi23 and switched to the same test in prgi24 as 
 prgm23 and prgm24.
@@ -372,8 +372,8 @@ For both prgi23 and prgi24, the students could take the test once a month
 throughout the year.
 They didn't have the exam proctored.
 They also couldn't earn bonus points for the test.
-\begin{fullwidth}
 \begin{flushleft}
+\begin{fullwidth}
 \begin{minipage}[t]{0.45\columnwidth}
   [[results attempts prgi23 LAB2]]:
   \begin{pycode}
@@ -387,8 +387,8 @@ minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'Datorprov'])
   \end{pycode}
 \end{minipage}
 \\[.5em]
-\end{flushleft}
 \end{fullwidth}
+\end{flushleft}
 For prgi25, the test will be proctored, same as for prgm23, prgm24, prgm25.
 
 \subsection{Results on LAB3}
@@ -426,8 +426,8 @@ minted_output(['bash', 'results.sh', 'grades', 'prgi24', 'LAB3'])
 \end{flushleft}
 
 Next we want to see the number of attempts.
-\begin{fullwidth}
 \begin{flushleft}
+\begin{fullwidth}
 \begin{minipage}[t]{0.45\columnwidth}
   [[results attempts prgm23 LAB3]]:
   \begin{pycode}
