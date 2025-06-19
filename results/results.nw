@@ -51,7 +51,10 @@ def minted_output(command, shell=False):
 \section{Some stats from the tilkry course}
 
 We'll give an overview of the stats here.
-We'll use the tilkry24 course as an example.
+We'll use the tilkry24 and tilkry25 courses\footnote{%
+  The DD2520 Applied Cryptography course (tilkry) is a master's level course.
+  It usually has 50--80 participants per year.
+} as examples.
 In the following section we see how the results are computed.
 In this section we'll just run the script and show the output here.
 
@@ -157,10 +160,28 @@ This changed the distribution of missing submissions.
 minted_output(['bash', 'results.sh', 'missing', 'tilkry25', 'LAB1'])
 \end{pycode}
 
+\subsection{Throughput}
+
+We also want to see how many students passed the course by the end of the 
+course and how many passed the course after the course ended.
+We can use the [[results throughput tilkry24 -r 61703]] command to see that.
+\begin{flushleft}
+  [[results throughput DD2520 -r 61703]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'throughput', 'DD2520', '-r', '61703'])
+  \end{pycode}
+\end{flushleft}
+
 \section{Some stats from the prgm and prgi courses}
 
 We'll now test the script on other courses.
-We'll use the introductory programming courses, prgm23 and prgi23, as examples.
+We'll use the introductory programming courses---prgm23, prgi23, prgm24 and 
+prgi24---as examples\footnote{%
+  The DD1310 (prgm, for maskinteknik) and DD1317 (prgi, for industriell 
+  ekonomi) courses are introductory programming courses---the first the 
+  students take on their programmes---with 220 and 180 participants, 
+  respectively.
+}.
 
 \subsection{Results on LAB1}
 
