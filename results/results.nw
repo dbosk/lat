@@ -453,9 +453,88 @@ minted_output(['bash', 'results.sh', 'attempts', 'prgm24', 'LAB3'])
 minted_output(['bash', 'results.sh', 'attempts', 'prgi24', 'LAB3'])
   \end{pycode}
 \end{minipage}
-\end{flushleft}
 \end{fullwidth}
+\end{flushleft}
 
+\subsection{When did they present their projects?}
+
+Finally, we want to see when they made their first graded submission for the 
+project (p-uppgiftsredovisning in LAB3).
+This is to see if students finish during the course or after.
+We can use the [[results pass_time prgi24 redovisning]] command to see that.
+\begin{flushleft}
+\begin{fullwidth}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results pass_time prgm23 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'pass_time', 'prgm23', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results pass_time prgi23 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'pass_time', 'prgi23', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\end{fullwidth}
+\begin{fullwidth}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results pass_time prgm24 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'pass_time', 'prgm24', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results pass_time prgi24 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'pass_time', 'prgi24', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\end{fullwidth}
+\end{flushleft}
+
+For the sake of it, let's compare the these results to the grading date 
+distribution instead.
+Why is this interesting?
+Because this is when they presented their project, not when they submitted it.
+So they might submit a week before presenting, or just five minutes before.
+We do this only for prgm24 and prgi24.
+\begin{flushleft}
+\begin{fullwidth}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grading_time prgm24 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'grading_time', 'prgm24', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  [[results grading_time prgi24 redovisning]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'grading_time', 'prgi24', 'redovisning'])
+  \end{pycode}
+\end{minipage}
+\end{fullwidth}
+\end{flushleft}
+
+
+\subsection{Throughput}
+
+We also want to see how many students passed the course by the end of the 
+course and how many passed the course after the course ended.
+We can use the commands [[results throughput DD1310 -r 50429]]
+and [[results throughput DD1317 -r 51345]] to see that.
+\begin{flushleft}
+  [[results throughput DD1310 -r 50429]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'throughput', 'DD1310', '-r', '50429'])
+  \end{pycode}
+\end{flushleft}
+\begin{flushleft}
+  [[results throughput DD1317 -r 51345]]:
+  \begin{pycode}
+minted_output(['bash', 'results.sh', 'throughput', 'DD1317', '-r', '51345'])
+  \end{pycode}
+\end{flushleft}
 
 
 \section{The script, or, how the results are made}
@@ -1011,6 +1090,91 @@ good complement to also add the ungraded submissions.
 <<call all functions>>=
 echo
 ungraded "$course" "$module"
+@
+
+
+\subsection{Pass time}
+
+We want to see how long it took for the students to pass an assignment the 
+first time, before any grade improvement.
+<<functions>>=
+pass_time() {
+  local course="$1"
+  local assign="$2"
+
+  <<let [[results]] contain all relevant student, submission and grade dates>>
+
+  for student in $(echo "$results" | cut -f 1 | sort -u); do
+		echo -ne "$student\t";
+    <<print the relevant date>>
+  done | <<count the dates>>
+}
+@
+
+The [[results]] variable should contain rows of tuples of student, submission 
+date and grade date.
+We use the [[fetch_history]] function to get the history of submissions for the 
+course and assignment.
+Since that function takes a module, but we are interested in assignments, we 
+must take all modules and then we filter for the relevant assignment.
+We're also only interested in the rows that have a passing grade, so we filter 
+for those with a passing grade only.
+<<let [[results]] contain all relevant student, submission and grade dates>>=
+local hist_csv=$(fetch_history "$course" "")
+local results=$(grep -E "$assign" "$hist_csv" \
+                | grep -E "\s([A-EP]|complete)\s" \
+                | cut -f 3,5-)
+@
+
+We want to get the first submission date for each student.
+The submissions are in order per student, so we only need to [[grep]] out the 
+student and then we can [[head]] the first line and [[cut]] the dates.
+Then we simply use the submission date if it exists, otherwise we use the 
+grading date.
+<<print the relevant date>>=
+dates=$(echo "$results" \
+        | grep "$student" \
+        | cut -f 2- | head -n 1)
+the_date=$(echo "$dates" | cut -f 1)
+if [[ "$the_date" = "" ]]; then
+  echo "$dates" | cut -f 2
+else
+  echo "$the_date"
+fi
+@
+
+Finally, we want to count the dates.
+We can do this by removing the time part of the date and then counting the 
+occurrences of each date.
+<<count the dates>>=
+sed "s/T[0-9:]*Z//g" | cut -f 2 | sort | uniq -c
+@
+
+\subsection{Grading time}
+
+Another interesting, and similar to passing time, is grading time.
+So instead of using the submission time as above, we use the grading time.
+The functions are very similar, they just differ in the printing.
+<<functions>>=
+grading_time() {
+  local course="$1"
+  local assign="$2"
+
+  <<let [[results]] contain all relevant student, submission and grade dates>>
+
+  for student in $(echo "$results" | cut -f 1 | sort -u); do
+    echo -ne "$student\t";
+    <<print the grading date>>
+  done | <<count the dates>>
+}
+@
+
+In this function, we simply print the grading date---which is always present.
+<<print the grading date>>=
+dates=$(echo "$results" \
+        | grep "$student" \
+        | cut -f 2- | head -n 1)
+echo "$dates" | cut -f 2
 @
 
 
